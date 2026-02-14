@@ -8,7 +8,7 @@ void main() async {
 }
 
 class SportCircleApp extends StatelessWidget {
-  const SportCircleApp({Key? key}) : super(key: key);
+  const SportCircleApp({super.key});
 
   @override
   Widget build(BuildContext context) {
