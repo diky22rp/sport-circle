@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sport_circle/core/di/injection.dart';
 import 'package:sport_circle/core/presentation/widgets/sport_circle_loading.dart';
+import 'package:sport_circle/core/storage/token_storage.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);
@@ -23,11 +23,11 @@ class _SplashScreenState extends State<SplashScreen> {
     await Future.delayed(const Duration(seconds: 2));
     if (!mounted) return;
 
-    // Cek apakah user sudah login (ada token tersimpan)
-    final prefs = getIt<SharedPreferences>();
-    final token = prefs.getString('token');
+    // Cek apakah user sudah login (ada token tersimpan secara aman)
+    final tokenStorage = getIt<TokenStorage>();
+    final hasToken = await tokenStorage.hasToken();
 
-    if (token != null && token.isNotEmpty) {
+    if (hasToken) {
       context.go('/home');
     } else {
       context.go('/login');

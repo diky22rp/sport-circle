@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sport_circle/core/di/injection.dart';
+import 'package:sport_circle/core/storage/token_storage.dart';
 import 'package:sport_circle/features/auth/presentation/bloc/login/login_bloc.dart';
 import 'package:sport_circle/features/auth/presentation/bloc/login/login_event.dart';
 import 'package:sport_circle/features/auth/presentation/bloc/login/login_state.dart';
@@ -44,9 +44,9 @@ class _LoginViewState extends State<_LoginView> {
       body: BlocConsumer<LoginBloc, LoginState>(
         listener: (context, state) async {
           if (state is LoginSuccess) {
-            // Simpan token ke SharedPreferences
-            final prefs = getIt<SharedPreferences>();
-            await prefs.setString('token', state.user.token ?? '');
+            // Simpan token secara aman (encrypted)
+            final tokenStorage = getIt<TokenStorage>();
+            await tokenStorage.saveToken(state.user.token ?? '');
 
             if (!context.mounted) return;
             ScaffoldMessenger.of(context).showSnackBar(

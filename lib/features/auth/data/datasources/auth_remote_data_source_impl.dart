@@ -58,4 +58,21 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       token: token?.toString(),
     );
   }
+
+  @override
+  Future<UserModel> getMe({required String token}) async {
+    final response = await _dio.get(
+      ApiConstants.me,
+      options: Options(
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Accept': 'application/json',
+        },
+      ),
+    );
+
+    final data = response.data;
+    final user = data['data'] ?? data;
+    return UserModel.fromJson(Map<String, dynamic>.from(user), token: token);
+  }
 }

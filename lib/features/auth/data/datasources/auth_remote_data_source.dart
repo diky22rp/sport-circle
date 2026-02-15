@@ -10,4 +10,5 @@ abstract class AuthRemoteDataSource {
     String role,
     String phoneNumber,
   });
+  Future<UserModel> getMe({required String token});
 }

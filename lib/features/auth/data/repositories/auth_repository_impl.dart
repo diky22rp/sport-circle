@@ -55,6 +55,18 @@ class AuthRepositoryImpl implements AuthRepository {
     }
   }
 
+  @override
+  Future<Either<Failure, UserEntity>> getMe({required String token}) async {
+    try {
+      final user = await _remoteDataSource.getMe(token: token);
+      return Right(user);
+    } on DioException catch (e) {
+      return Left(_mapDioToFailure(e));
+    } catch (e) {
+      return Left(ServerFailure(e.toString()));
+    }
+  }
+
   Failure _mapDioToFailure(DioException e) {
     switch (e.type) {
       case DioExceptionType.connectionTimeout:

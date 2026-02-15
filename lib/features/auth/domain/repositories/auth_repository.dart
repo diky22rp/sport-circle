@@ -16,4 +16,6 @@ abstract class AuthRepository {
     String role,
     String phoneNumber,
   });
+
+  Future<Either<Failure, UserEntity>> getMe({required String token});
 }
