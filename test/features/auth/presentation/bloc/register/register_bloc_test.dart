@@ -41,7 +41,12 @@ void main() {
     );
 
     bloc.add(
-      const RegisterSubmitted(name: '', email: 'b@b.com', password: 'pw'),
+      const RegisterSubmitted(
+        name: '',
+        email: 'b@b.com',
+        password: 'pw',
+        cPassword: 'pw',
+      ),
     );
     await future;
   });
@@ -54,6 +59,9 @@ void main() {
           name: any(named: 'name'),
           email: any(named: 'email'),
           password: any(named: 'password'),
+          cPassword: any(named: 'cPassword'),
+          role: any(named: 'role'),
+          phoneNumber: any(named: 'phoneNumber'),
         ),
       ).thenAnswer((_) async => const Right(tUser));
 
@@ -67,6 +75,7 @@ void main() {
           name: 'New User',
           email: 'b@b.com',
           password: 'pw',
+          cPassword: 'pw',
         ),
       );
       await future;
@@ -81,6 +90,9 @@ void main() {
           name: any(named: 'name'),
           email: any(named: 'email'),
           password: any(named: 'password'),
+          cPassword: any(named: 'cPassword'),
+          role: any(named: 'role'),
+          phoneNumber: any(named: 'phoneNumber'),
         ),
       ).thenAnswer(
         (_) async => const Left(ServerFailure('Email sudah terdaftar')),
@@ -92,7 +104,32 @@ void main() {
       );
 
       bloc.add(
-        const RegisterSubmitted(name: 'X', email: 'b@b.com', password: 'pw'),
+        const RegisterSubmitted(
+          name: 'X',
+          email: 'b@b.com',
+          password: 'pw',
+          cPassword: 'pw',
+        ),
+      );
+      await future;
+    },
+  );
+
+  test(
+    'emits [RegisterFailure] when password and cPassword do not match',
+    () async {
+      final future = expectLater(
+        bloc.stream,
+        emitsInOrder([isA<RegisterFailure>()]),
+      );
+
+      bloc.add(
+        const RegisterSubmitted(
+          name: 'User',
+          email: 'b@b.com',
+          password: 'pw',
+          cPassword: 'different',
+        ),
       );
       await future;
     },

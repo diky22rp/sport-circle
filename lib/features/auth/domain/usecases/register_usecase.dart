@@ -13,7 +13,17 @@ class RegisterUseCase {
     required String name,
     required String email,
     required String password,
+    required String cPassword,
+    String role = 'user',
+    String phoneNumber = '',
   }) {
-    return _repository.register(name: name, email: email, password: password);
+    return _repository.register(
+      name: name,
+      email: email,
+      password: password,
+      cPassword: cPassword,
+      role: role,
+      phoneNumber: phoneNumber,
+    );
   }
 }

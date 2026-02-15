@@ -21,8 +21,7 @@ class SportCircleApp extends StatelessWidget {
       title: 'SportCircle',
       theme: AppTheme.light(),
       darkTheme: AppTheme.dark(),
-      routeInformationParser: appRouter.routeInformationParser,
-      routerDelegate: appRouter.routerDelegate,
+      routerConfig: appRouter,
       debugShowCheckedModeBanner: false,
     );
   }

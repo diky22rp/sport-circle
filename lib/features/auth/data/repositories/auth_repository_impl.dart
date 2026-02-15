@@ -34,12 +34,18 @@ class AuthRepositoryImpl implements AuthRepository {
     required String name,
     required String email,
     required String password,
+    required String cPassword,
+    String role = 'user',
+    String phoneNumber = '',
   }) async {
     try {
       final user = await _remoteDataSource.register(
         name: name,
         email: email,
         password: password,
+        cPassword: cPassword,
+        role: role,
+        phoneNumber: phoneNumber,
       );
       return Right(user);
     } on DioException catch (e) {

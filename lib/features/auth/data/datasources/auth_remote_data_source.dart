@@ -6,5 +6,8 @@ abstract class AuthRemoteDataSource {
     required String name,
     required String email,
     required String password,
+    required String cPassword,
+    String role,
+    String phoneNumber,
   });
 }

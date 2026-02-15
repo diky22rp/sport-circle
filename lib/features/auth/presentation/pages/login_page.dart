@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sport_circle/core/di/injection.dart';
 import 'package:sport_circle/features/auth/presentation/bloc/login/login_bloc.dart';
 import 'package:sport_circle/features/auth/presentation/bloc/login/login_event.dart';
@@ -40,12 +42,17 @@ class _LoginViewState extends State<_LoginView> {
     return Scaffold(
       appBar: AppBar(title: const Text('Login')),
       body: BlocConsumer<LoginBloc, LoginState>(
-        listener: (context, state) {
+        listener: (context, state) async {
           if (state is LoginSuccess) {
+            // Simpan token ke SharedPreferences
+            final prefs = getIt<SharedPreferences>();
+            await prefs.setString('token', state.user.token ?? '');
+
+            if (!context.mounted) return;
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(content: Text('Welcome, ${state.user.name}!')),
             );
-            // Navigate to home
+            context.go('/home');
           } else if (state is LoginFailure) {
             ScaffoldMessenger.of(
               context,
@@ -98,9 +105,7 @@ class _LoginViewState extends State<_LoginView> {
                   ),
                 const SizedBox(height: 16),
                 TextButton(
-                  onPressed: () {
-                    // Navigate to register page
-                  },
+                  onPressed: () => context.push('/register'),
                   child: const Text('Belum punya akun? Daftar'),
                 ),
               ],

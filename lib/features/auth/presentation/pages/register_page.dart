@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:sport_circle/core/di/injection.dart';
 import 'package:sport_circle/features/auth/presentation/bloc/register/register_bloc.dart';
 import 'package:sport_circle/features/auth/presentation/bloc/register/register_event.dart';
@@ -28,12 +29,14 @@ class _RegisterViewState extends State<_RegisterView> {
   final _nameController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  final _cPasswordController = TextEditingController();
 
   @override
   void dispose() {
     _nameController.dispose();
     _emailController.dispose();
     _passwordController.dispose();
+    _cPasswordController.dispose();
     super.dispose();
   }
 
@@ -47,7 +50,7 @@ class _RegisterViewState extends State<_RegisterView> {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(content: Text('Berhasil daftar, ${state.user.name}!')),
             );
-            Navigator.of(context).pop(); // back to login
+            context.go('/login'); // kembali ke login
           } else if (state is RegisterFailure) {
             ScaffoldMessenger.of(
               context,
@@ -88,6 +91,16 @@ class _RegisterViewState extends State<_RegisterView> {
                   ),
                   obscureText: true,
                 ),
+                const SizedBox(height: 16),
+                TextField(
+                  key: const Key('cPasswordField'),
+                  controller: _cPasswordController,
+                  decoration: const InputDecoration(
+                    labelText: 'Konfirmasi Password',
+                    border: OutlineInputBorder(),
+                  ),
+                  obscureText: true,
+                ),
                 const SizedBox(height: 24),
                 if (state is RegisterLoading)
                   const CircularProgressIndicator()
@@ -102,6 +115,7 @@ class _RegisterViewState extends State<_RegisterView> {
                             name: _nameController.text,
                             email: _emailController.text,
                             password: _passwordController.text,
+                            cPassword: _cPasswordController.text,
                           ),
                         );
                       },
@@ -110,7 +124,7 @@ class _RegisterViewState extends State<_RegisterView> {
                   ),
                 const SizedBox(height: 16),
                 TextButton(
-                  onPressed: () => Navigator.of(context).pop(),
+                  onPressed: () => context.go('/login'),
                   child: const Text('Sudah punya akun? Login'),
                 ),
               ],

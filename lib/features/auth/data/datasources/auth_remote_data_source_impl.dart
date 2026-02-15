@@ -34,10 +34,20 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     required String name,
     required String email,
     required String password,
+    required String cPassword,
+    String role = 'user',
+    String phoneNumber = '',
   }) async {
     final response = await _dio.post(
       ApiConstants.register,
-      data: {'name': name, 'email': email, 'password': password},
+      data: {
+        'email': email,
+        'name': name,
+        'password': password,
+        'c_password': cPassword,
+        'role': role,
+        'phone_number': phoneNumber,
+      },
     );
 
     final data = response.data;
