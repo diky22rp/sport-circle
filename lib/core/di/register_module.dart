@@ -1,10 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:injectable/injectable.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-// If you use Firebase, uncomment and add firebase packages to pubspec
-// import 'package:firebase_auth/firebase_auth.dart';
-// import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:sport_circle/core/constants/api_constants.dart';
 
 @module
 abstract class RegisterModule {
@@ -16,14 +13,15 @@ abstract class RegisterModule {
   @lazySingleton
   Dio dio() => Dio(
     BaseOptions(
-      connectTimeout: const Duration(seconds: 10),
-      receiveTimeout: const Duration(seconds: 10),
+      baseUrl: ApiConstants.baseUrl,
+      connectTimeout: const Duration(seconds: 15),
+      receiveTimeout: const Duration(seconds: 15),
       headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
       },
     ),
-  );
+  )..interceptors.add(LogInterceptor(requestBody: true, responseBody: true));
 
   // Firebase examples (optional)
   // @lazySingleton
