@@ -1,15 +1,23 @@
-import 'package:bloc/bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
 import 'core/di/injection.dart';
 import 'core/presentation/bloc_observer.dart';
 import 'core/themes/app_theme.dart';
 import 'core/routes/app_router.dart';
+import 'package:sport_circle/features/authentication/presentation/bloc/authentication/authentication_bloc.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await configureDependencies();
   Bloc.observer = AppBlocObserver();
-  runApp(const SportCircleApp());
+  runApp(
+    MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (context) => getIt<AuthenticationBloc>()),
+      ],
+      child: const SportCircleApp(),
+    ),
+  );
 }
 
 class SportCircleApp extends StatelessWidget {

@@ -1,6 +1,6 @@
 import 'package:go_router/go_router.dart';
-import 'package:sport_circle/features/auth/presentation/pages/login_page.dart';
-import 'package:sport_circle/features/auth/presentation/pages/register_page.dart';
+import 'package:sport_circle/features/authentication/presentation/pages/login_page.dart';
+import 'package:sport_circle/features/authentication/presentation/pages/register_page.dart';
 import 'package:sport_circle/presentation/screens/splash_screen.dart';
 import 'package:sport_circle/presentation/screens/home_screen.dart';
 

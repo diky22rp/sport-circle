@@ -83,9 +83,8 @@ class AppTheme {
 
     return base.copyWith(
       colorScheme: base.colorScheme.copyWith(
-        primary: primary,
+        primary: const Color(0xFFFF385C),
         surface: darkSurface,
-        background: darkBackground,
         onPrimary: Colors.white,
         onSurface: darkText,
       ),

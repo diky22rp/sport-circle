@@ -15,27 +15,32 @@ import 'package:get_it/get_it.dart' as _i174;
 import 'package:injectable/injectable.dart' as _i526;
 import 'package:shared_preferences/shared_preferences.dart' as _i460;
 import 'package:sport_circle/core/di/register_module.dart' as _i224;
-import 'package:sport_circle/core/storage/token_storage.dart' as _i531;
-import 'package:sport_circle/features/auth/data/datasources/auth_remote_data_source.dart'
-    as _i952;
-import 'package:sport_circle/features/auth/data/datasources/auth_remote_data_source_impl.dart'
-    as _i749;
-import 'package:sport_circle/features/auth/data/repositories/auth_repository_impl.dart'
-    as _i853;
-import 'package:sport_circle/features/auth/domain/repositories/auth_repository.dart'
-    as _i568;
-import 'package:sport_circle/features/auth/domain/usecases/get_me_usecase.dart'
-    as _i958;
-import 'package:sport_circle/features/auth/domain/usecases/login_usecase.dart'
-    as _i888;
-import 'package:sport_circle/features/auth/domain/usecases/register_usecase.dart'
-    as _i782;
-import 'package:sport_circle/features/auth/presentation/bloc/home/home_bloc.dart'
-    as _i293;
-import 'package:sport_circle/features/auth/presentation/bloc/login/login_bloc.dart'
-    as _i634;
-import 'package:sport_circle/features/auth/presentation/bloc/register/register_bloc.dart'
-    as _i940;
+import 'package:sport_circle/features/authentication/data/datasources/auth_api_client.dart'
+    as _i734;
+import 'package:sport_circle/features/authentication/data/datasources/local/auth_local_data_source.dart'
+    as _i531;
+import 'package:sport_circle/features/authentication/data/datasources/remote/auth_remote_data_source.dart'
+    as _i867;
+import 'package:sport_circle/features/authentication/data/datasources/remote/auth_remote_data_source_impl.dart'
+    as _i599;
+import 'package:sport_circle/features/authentication/data/repositories/auth_repository_impl.dart'
+    as _i152;
+import 'package:sport_circle/features/authentication/domain/repositories/auth_repository.dart'
+    as _i896;
+import 'package:sport_circle/features/authentication/domain/usecases/check_token_usecase.dart'
+    as _i110;
+import 'package:sport_circle/features/authentication/domain/usecases/get_me_usecase.dart'
+    as _i209;
+import 'package:sport_circle/features/authentication/domain/usecases/login_usecase.dart'
+    as _i36;
+import 'package:sport_circle/features/authentication/domain/usecases/register_usecase.dart'
+    as _i499;
+import 'package:sport_circle/features/authentication/presentation/bloc/authentication/authentication_bloc.dart'
+    as _i760;
+import 'package:sport_circle/features/authentication/presentation/bloc/login/login_bloc.dart'
+    as _i112;
+import 'package:sport_circle/features/authentication/presentation/bloc/register/register_bloc.dart'
+    as _i435;
 
 extension GetItInjectableX on _i174.GetIt {
   // initializes the registration of main-scope dependencies inside of GetIt
@@ -53,32 +58,42 @@ extension GetItInjectableX on _i174.GetIt {
       () => registerModule.secureStorage,
     );
     gh.lazySingleton<_i361.Dio>(() => registerModule.dio());
-    gh.lazySingleton<_i531.TokenStorage>(
-      () => _i531.TokenStorage(gh<_i558.FlutterSecureStorage>()),
+    gh.lazySingleton<_i531.AuthLocalDataSource>(
+      () => _i531.AuthLocalDataSourceImpl(gh<_i558.FlutterSecureStorage>()),
     );
-    gh.lazySingleton<_i952.AuthRemoteDataSource>(
-      () => _i749.AuthRemoteDataSourceImpl(gh<_i361.Dio>()),
+    gh.lazySingleton<_i734.AuthApiClient>(
+      () => registerModule.authApiClient(gh<_i361.Dio>()),
     );
-    gh.lazySingleton<_i568.AuthRepository>(
-      () => _i853.AuthRepositoryImpl(gh<_i952.AuthRemoteDataSource>()),
+    gh.lazySingleton<_i867.AuthRemoteDataSource>(
+      () => _i599.AuthRemoteDataSourceImpl(gh<_i734.AuthApiClient>()),
     );
-    gh.lazySingleton<_i958.GetMeUseCase>(
-      () => _i958.GetMeUseCase(gh<_i568.AuthRepository>()),
+    gh.lazySingleton<_i896.AuthRepository>(
+      () => _i152.AuthRepositoryImpl(
+        gh<_i867.AuthRemoteDataSource>(),
+        gh<_i531.AuthLocalDataSource>(),
+      ),
     );
-    gh.lazySingleton<_i888.LoginUseCase>(
-      () => _i888.LoginUseCase(gh<_i568.AuthRepository>()),
+    gh.lazySingleton<_i110.CheckTokenUseCase>(
+      () => _i110.CheckTokenUseCase(gh<_i896.AuthRepository>()),
     );
-    gh.lazySingleton<_i782.RegisterUseCase>(
-      () => _i782.RegisterUseCase(gh<_i568.AuthRepository>()),
+    gh.lazySingleton<_i209.GetMeUseCase>(
+      () => _i209.GetMeUseCase(gh<_i896.AuthRepository>()),
     );
-    gh.factory<_i293.HomeBloc>(
-      () => _i293.HomeBloc(gh<_i958.GetMeUseCase>(), gh<_i531.TokenStorage>()),
+    gh.lazySingleton<_i36.LoginUseCase>(
+      () => _i36.LoginUseCase(gh<_i896.AuthRepository>()),
     );
-    gh.factory<_i634.LoginBloc>(
-      () => _i634.LoginBloc(gh<_i888.LoginUseCase>()),
+    gh.lazySingleton<_i499.RegisterUseCase>(
+      () => _i499.RegisterUseCase(gh<_i896.AuthRepository>()),
     );
-    gh.factory<_i940.RegisterBloc>(
-      () => _i940.RegisterBloc(gh<_i782.RegisterUseCase>()),
+    gh.factory<_i760.AuthenticationBloc>(
+      () => _i760.AuthenticationBloc(
+        gh<_i209.GetMeUseCase>(),
+        gh<_i110.CheckTokenUseCase>(),
+      ),
+    );
+    gh.factory<_i112.LoginBloc>(() => _i112.LoginBloc(gh<_i36.LoginUseCase>()));
+    gh.factory<_i435.RegisterBloc>(
+      () => _i435.RegisterBloc(gh<_i499.RegisterUseCase>()),
     );
     return this;
   }

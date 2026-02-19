@@ -2,17 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:sport_circle/core/di/injection.dart';
-import 'package:sport_circle/features/auth/presentation/bloc/home/home_bloc.dart';
-import 'package:sport_circle/features/auth/presentation/bloc/home/home_event.dart';
-import 'package:sport_circle/features/auth/presentation/bloc/home/home_state.dart';
+import 'package:sport_circle/features/authentication/presentation/bloc/authentication/authentication_bloc.dart';
+import 'package:sport_circle/features/authentication/presentation/bloc/authentication/authentication_event.dart';
+import 'package:sport_circle/features/authentication/presentation/bloc/authentication/authentication_state.dart';
 
 class HomeScreen extends StatelessWidget {
-  const HomeScreen({Key? key}) : super(key: key);
+  const HomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => getIt<HomeBloc>()..add(HomeFetchUser()),
+      create: (_) =>
+          getIt<AuthenticationBloc>()..add(AuthenticationFetchUser()),
       child: const _HomeView(),
     );
   }
@@ -30,27 +31,27 @@ class _HomeView extends StatelessWidget {
           IconButton(
             icon: const Icon(Icons.logout),
             onPressed: () {
-              context.read<HomeBloc>().add(HomeLogout());
+              context.read<AuthenticationBloc>().add(AuthenticationLogout());
             },
           ),
         ],
       ),
-      body: BlocConsumer<HomeBloc, HomeState>(
+      body: BlocConsumer<AuthenticationBloc, AuthenticationState>(
         listener: (context, state) {
-          if (state is HomeLoggedOut) {
+          if (state is AuthenticationLoggedOut) {
             context.go('/login');
-          } else if (state is HomeFailure) {
+          } else if (state is AuthenticationFailure) {
             ScaffoldMessenger.of(
               context,
             ).showSnackBar(SnackBar(content: Text(state.message)));
           }
         },
         builder: (context, state) {
-          if (state is HomeLoading) {
+          if (state is AuthenticationLoading) {
             return const Center(child: CircularProgressIndicator());
           }
 
-          if (state is HomeLoaded) {
+          if (state is AuthenticationLoaded) {
             final user = state.user;
             return Padding(
               padding: const EdgeInsets.all(24.0),
@@ -114,7 +115,7 @@ class _HomeView extends StatelessWidget {
             );
           }
 
-          if (state is HomeFailure) {
+          if (state is AuthenticationFailure) {
             return Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -124,8 +125,9 @@ class _HomeView extends StatelessWidget {
                   Text(state.message, textAlign: TextAlign.center),
                   const SizedBox(height: 16),
                   ElevatedButton(
-                    onPressed: () =>
-                        context.read<HomeBloc>().add(HomeFetchUser()),
+                    onPressed: () => context.read<AuthenticationBloc>().add(
+                      AuthenticationFetchUser(),
+                    ),
                     child: const Text('Coba Lagi'),
                   ),
                 ],
