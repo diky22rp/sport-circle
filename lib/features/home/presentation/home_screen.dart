@@ -2,11 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:sport_circle/features/authentication/presentation/bloc/authentication/authentication_bloc.dart';
-import 'package:sport_circle/features/authentication/presentation/bloc/authentication/authentication_event.dart';
-import 'package:sport_circle/features/authentication/presentation/bloc/authentication/authentication_state.dart';
 import 'package:sport_circle/features/category/presentation/bloc/category_bloc.dart';
-import 'package:sport_circle/features/category/presentation/bloc/category_event.dart';
-import 'package:sport_circle/features/category/presentation/bloc/category_state.dart';
 import 'package:sport_circle/features/category/presentation/pages/category_horizontal_list.dart';
 import 'package:sport_circle/features/category/presentation/pages/category_horizontal_list_skeleton.dart';
 import 'dart:developer';
@@ -65,7 +61,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     child: TextField(
                       decoration: InputDecoration(
-                        hintText: 'Search by gocit or location',
+                        hintText: 'Search Activities',
                         prefixIcon: Icon(Icons.search),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(24),
@@ -92,7 +88,23 @@ class _HomeScreenState extends State<HomeScreen> {
                           selectedCategoryId: selectedCategoryId,
                           onCategorySelected: (id) {
                             setState(() => selectedCategoryId = id);
-                            // TODO: open pop up screen for category filter activity
+                            // TODO: open pop up screen for category filter activity, showing activities based on category selected, created dummy page first
+                            showDialog(
+                              context: context,
+                              builder: (context) => AlertDialog(
+                                title: const Text('Category Selected'),
+                                content: Text(
+                                  'Show activities for category ID: $id',
+                                ),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () =>
+                                        Navigator.of(context).pop(),
+                                    child: const Text('Close'),
+                                  ),
+                                ],
+                              ),
+                            );
                           },
                         );
                       }
@@ -238,25 +250,6 @@ class _HomeScreenState extends State<HomeScreen> {
               ],
             ),
             body: body,
-            floatingActionButton: FloatingActionButton(
-              onPressed: () {
-                // TODO: Tambah aktivitas baru
-              },
-              child: const Icon(Icons.add),
-            ),
-            floatingActionButtonLocation:
-                FloatingActionButtonLocation.centerDocked,
-            bottomNavigationBar: BottomNavigationBar(
-              currentIndex: 0,
-              items: const [
-                BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.favorite),
-                  label: 'Saved',
-                ),
-                BottomNavigationBarItem(icon: Icon(Icons.menu), label: 'Menu'),
-              ],
-            ),
           );
         },
       ),
