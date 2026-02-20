@@ -5,7 +5,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sport_circle/core/utils/responsive_helper.dart';
 import 'package:sport_circle/core/presentation/widgets/loading_indicator.dart';
 import 'package:sport_circle/features/authentication/presentation/bloc/authentication/authentication_bloc.dart';
-import 'package:sport_circle/features/authentication/presentation/bloc/authentication/authentication_state.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
