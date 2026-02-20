@@ -89,4 +89,35 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       token: token,
     );
   }
+
+  // Calls AuthApiClient.updateProfile (POST /api/v1/update-user/id) with the provided token and profile data.
+  @override
+  Future<UserModel> updateProfile({
+    required int userId,
+    required String email,
+    required String name,
+    required String phoneNumber,
+    required String password,
+    required String cPassword,
+    required String token,
+    String role = 'user',
+  }) async {
+    final response = await _apiClient.updateProfile(userId, 'Bearer $token', {
+      'email': email,
+      'name': name,
+      'phone_number': phoneNumber,
+      'password': password,
+      'c_password': cPassword,
+      'role': role,
+    });
+    final user = response.data;
+    return UserModel(
+      id: user?.id ?? '',
+      name: user?.name ?? '',
+      email: user?.email ?? '',
+      role: user?.role,
+      phoneNumber: user?.phoneNumber,
+      token: token,
+    );
+  }
 }

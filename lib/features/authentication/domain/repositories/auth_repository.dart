@@ -19,4 +19,12 @@ abstract class AuthRepository {
 
   Future<Either<Failure, UserEntity>> getMe();
   Future<bool> hasToken();
+
+  Future<Either<Failure, UserEntity>> updateProfile({
+    required String email,
+    required String name,
+    required String phoneNumber,
+    required String password,
+    required String cPassword,
+  });
 }

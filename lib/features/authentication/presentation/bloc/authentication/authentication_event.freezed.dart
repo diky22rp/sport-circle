@@ -55,13 +55,14 @@ extension AuthenticationEventPatterns on AuthenticationEvent {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( _FetchUser value)?  fetchUser,TResult Function( _Logout value)?  logout,TResult Function( _CheckToken value)?  checkToken,required TResult orElse(),}){
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( _FetchUser value)?  fetchUser,TResult Function( _Logout value)?  logout,TResult Function( _CheckToken value)?  checkToken,TResult Function( _UpdateProfile value)?  updateProfile,required TResult orElse(),}){
 final _that = this;
 switch (_that) {
 case _FetchUser() when fetchUser != null:
 return fetchUser(_that);case _Logout() when logout != null:
 return logout(_that);case _CheckToken() when checkToken != null:
-return checkToken(_that);case _:
+return checkToken(_that);case _UpdateProfile() when updateProfile != null:
+return updateProfile(_that);case _:
   return orElse();
 
 }
@@ -79,13 +80,14 @@ return checkToken(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( _FetchUser value)  fetchUser,required TResult Function( _Logout value)  logout,required TResult Function( _CheckToken value)  checkToken,}){
+@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( _FetchUser value)  fetchUser,required TResult Function( _Logout value)  logout,required TResult Function( _CheckToken value)  checkToken,required TResult Function( _UpdateProfile value)  updateProfile,}){
 final _that = this;
 switch (_that) {
 case _FetchUser():
 return fetchUser(_that);case _Logout():
 return logout(_that);case _CheckToken():
-return checkToken(_that);}
+return checkToken(_that);case _UpdateProfile():
+return updateProfile(_that);}
 }
 /// A variant of `map` that fallback to returning `null`.
 ///
@@ -99,13 +101,14 @@ return checkToken(_that);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( _FetchUser value)?  fetchUser,TResult? Function( _Logout value)?  logout,TResult? Function( _CheckToken value)?  checkToken,}){
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( _FetchUser value)?  fetchUser,TResult? Function( _Logout value)?  logout,TResult? Function( _CheckToken value)?  checkToken,TResult? Function( _UpdateProfile value)?  updateProfile,}){
 final _that = this;
 switch (_that) {
 case _FetchUser() when fetchUser != null:
 return fetchUser(_that);case _Logout() when logout != null:
 return logout(_that);case _CheckToken() when checkToken != null:
-return checkToken(_that);case _:
+return checkToken(_that);case _UpdateProfile() when updateProfile != null:
+return updateProfile(_that);case _:
   return null;
 
 }
@@ -122,12 +125,13 @@ return checkToken(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  fetchUser,TResult Function()?  logout,TResult Function()?  checkToken,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  fetchUser,TResult Function()?  logout,TResult Function()?  checkToken,TResult Function( String name,  String email,  String? phoneNumber,  String? password,  String? cPassword)?  updateProfile,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _FetchUser() when fetchUser != null:
 return fetchUser();case _Logout() when logout != null:
 return logout();case _CheckToken() when checkToken != null:
-return checkToken();case _:
+return checkToken();case _UpdateProfile() when updateProfile != null:
+return updateProfile(_that.name,_that.email,_that.phoneNumber,_that.password,_that.cPassword);case _:
   return orElse();
 
 }
@@ -145,12 +149,13 @@ return checkToken();case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  fetchUser,required TResult Function()  logout,required TResult Function()  checkToken,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  fetchUser,required TResult Function()  logout,required TResult Function()  checkToken,required TResult Function( String name,  String email,  String? phoneNumber,  String? password,  String? cPassword)  updateProfile,}) {final _that = this;
 switch (_that) {
 case _FetchUser():
 return fetchUser();case _Logout():
 return logout();case _CheckToken():
-return checkToken();}
+return checkToken();case _UpdateProfile():
+return updateProfile(_that.name,_that.email,_that.phoneNumber,_that.password,_that.cPassword);}
 }
 /// A variant of `when` that fallback to returning `null`
 ///
@@ -164,12 +169,13 @@ return checkToken();}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  fetchUser,TResult? Function()?  logout,TResult? Function()?  checkToken,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  fetchUser,TResult? Function()?  logout,TResult? Function()?  checkToken,TResult? Function( String name,  String email,  String? phoneNumber,  String? password,  String? cPassword)?  updateProfile,}) {final _that = this;
 switch (_that) {
 case _FetchUser() when fetchUser != null:
 return fetchUser();case _Logout() when logout != null:
 return logout();case _CheckToken() when checkToken != null:
-return checkToken();case _:
+return checkToken();case _UpdateProfile() when updateProfile != null:
+return updateProfile(_that.name,_that.email,_that.phoneNumber,_that.password,_that.cPassword);case _:
   return null;
 
 }
@@ -272,5 +278,79 @@ String toString() {
 
 
 
+
+/// @nodoc
+
+
+class _UpdateProfile implements AuthenticationEvent {
+  const _UpdateProfile({required this.name, required this.email, this.phoneNumber, this.password, this.cPassword});
+  
+
+ final  String name;
+ final  String email;
+ final  String? phoneNumber;
+ final  String? password;
+ final  String? cPassword;
+
+/// Create a copy of AuthenticationEvent
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$UpdateProfileCopyWith<_UpdateProfile> get copyWith => __$UpdateProfileCopyWithImpl<_UpdateProfile>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _UpdateProfile&&(identical(other.name, name) || other.name == name)&&(identical(other.email, email) || other.email == email)&&(identical(other.phoneNumber, phoneNumber) || other.phoneNumber == phoneNumber)&&(identical(other.password, password) || other.password == password)&&(identical(other.cPassword, cPassword) || other.cPassword == cPassword));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,name,email,phoneNumber,password,cPassword);
+
+@override
+String toString() {
+  return 'AuthenticationEvent.updateProfile(name: $name, email: $email, phoneNumber: $phoneNumber, password: $password, cPassword: $cPassword)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$UpdateProfileCopyWith<$Res> implements $AuthenticationEventCopyWith<$Res> {
+  factory _$UpdateProfileCopyWith(_UpdateProfile value, $Res Function(_UpdateProfile) _then) = __$UpdateProfileCopyWithImpl;
+@useResult
+$Res call({
+ String name, String email, String? phoneNumber, String? password, String? cPassword
+});
+
+
+
+
+}
+/// @nodoc
+class __$UpdateProfileCopyWithImpl<$Res>
+    implements _$UpdateProfileCopyWith<$Res> {
+  __$UpdateProfileCopyWithImpl(this._self, this._then);
+
+  final _UpdateProfile _self;
+  final $Res Function(_UpdateProfile) _then;
+
+/// Create a copy of AuthenticationEvent
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') $Res call({Object? name = null,Object? email = null,Object? phoneNumber = freezed,Object? password = freezed,Object? cPassword = freezed,}) {
+  return _then(_UpdateProfile(
+name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
+as String,email: null == email ? _self.email : email // ignore: cast_nullable_to_non_nullable
+as String,phoneNumber: freezed == phoneNumber ? _self.phoneNumber : phoneNumber // ignore: cast_nullable_to_non_nullable
+as String?,password: freezed == password ? _self.password : password // ignore: cast_nullable_to_non_nullable
+as String?,cPassword: freezed == cPassword ? _self.cPassword : cPassword // ignore: cast_nullable_to_non_nullable
+as String?,
+  ));
+}
+
+
+}
 
 // dart format on

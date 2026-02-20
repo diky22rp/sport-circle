@@ -55,7 +55,7 @@ extension AuthenticationStatePatterns on AuthenticationState {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( _Initial value)?  initial,TResult Function( _Loading value)?  loading,TResult Function( _Loaded value)?  loaded,TResult Function( _Failure value)?  failure,TResult Function( _LoggedOut value)?  loggedOut,TResult Function( _Authenticated value)?  authenticated,TResult Function( _Unauthenticated value)?  unauthenticated,required TResult orElse(),}){
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( _Initial value)?  initial,TResult Function( _Loading value)?  loading,TResult Function( _Loaded value)?  loaded,TResult Function( _Failure value)?  failure,TResult Function( _LoggedOut value)?  loggedOut,TResult Function( _Authenticated value)?  authenticated,TResult Function( _Unauthenticated value)?  unauthenticated,TResult Function( _UpdateProfileLoading value)?  updateProfileLoading,TResult Function( _UpdateProfileSuccess value)?  updateProfileSuccess,TResult Function( _UpdateProfileFailure value)?  updateProfileFailure,required TResult orElse(),}){
 final _that = this;
 switch (_that) {
 case _Initial() when initial != null:
@@ -65,7 +65,10 @@ return loaded(_that);case _Failure() when failure != null:
 return failure(_that);case _LoggedOut() when loggedOut != null:
 return loggedOut(_that);case _Authenticated() when authenticated != null:
 return authenticated(_that);case _Unauthenticated() when unauthenticated != null:
-return unauthenticated(_that);case _:
+return unauthenticated(_that);case _UpdateProfileLoading() when updateProfileLoading != null:
+return updateProfileLoading(_that);case _UpdateProfileSuccess() when updateProfileSuccess != null:
+return updateProfileSuccess(_that);case _UpdateProfileFailure() when updateProfileFailure != null:
+return updateProfileFailure(_that);case _:
   return orElse();
 
 }
@@ -83,7 +86,7 @@ return unauthenticated(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( _Initial value)  initial,required TResult Function( _Loading value)  loading,required TResult Function( _Loaded value)  loaded,required TResult Function( _Failure value)  failure,required TResult Function( _LoggedOut value)  loggedOut,required TResult Function( _Authenticated value)  authenticated,required TResult Function( _Unauthenticated value)  unauthenticated,}){
+@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( _Initial value)  initial,required TResult Function( _Loading value)  loading,required TResult Function( _Loaded value)  loaded,required TResult Function( _Failure value)  failure,required TResult Function( _LoggedOut value)  loggedOut,required TResult Function( _Authenticated value)  authenticated,required TResult Function( _Unauthenticated value)  unauthenticated,required TResult Function( _UpdateProfileLoading value)  updateProfileLoading,required TResult Function( _UpdateProfileSuccess value)  updateProfileSuccess,required TResult Function( _UpdateProfileFailure value)  updateProfileFailure,}){
 final _that = this;
 switch (_that) {
 case _Initial():
@@ -93,7 +96,10 @@ return loaded(_that);case _Failure():
 return failure(_that);case _LoggedOut():
 return loggedOut(_that);case _Authenticated():
 return authenticated(_that);case _Unauthenticated():
-return unauthenticated(_that);}
+return unauthenticated(_that);case _UpdateProfileLoading():
+return updateProfileLoading(_that);case _UpdateProfileSuccess():
+return updateProfileSuccess(_that);case _UpdateProfileFailure():
+return updateProfileFailure(_that);}
 }
 /// A variant of `map` that fallback to returning `null`.
 ///
@@ -107,7 +113,7 @@ return unauthenticated(_that);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( _Initial value)?  initial,TResult? Function( _Loading value)?  loading,TResult? Function( _Loaded value)?  loaded,TResult? Function( _Failure value)?  failure,TResult? Function( _LoggedOut value)?  loggedOut,TResult? Function( _Authenticated value)?  authenticated,TResult? Function( _Unauthenticated value)?  unauthenticated,}){
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( _Initial value)?  initial,TResult? Function( _Loading value)?  loading,TResult? Function( _Loaded value)?  loaded,TResult? Function( _Failure value)?  failure,TResult? Function( _LoggedOut value)?  loggedOut,TResult? Function( _Authenticated value)?  authenticated,TResult? Function( _Unauthenticated value)?  unauthenticated,TResult? Function( _UpdateProfileLoading value)?  updateProfileLoading,TResult? Function( _UpdateProfileSuccess value)?  updateProfileSuccess,TResult? Function( _UpdateProfileFailure value)?  updateProfileFailure,}){
 final _that = this;
 switch (_that) {
 case _Initial() when initial != null:
@@ -117,7 +123,10 @@ return loaded(_that);case _Failure() when failure != null:
 return failure(_that);case _LoggedOut() when loggedOut != null:
 return loggedOut(_that);case _Authenticated() when authenticated != null:
 return authenticated(_that);case _Unauthenticated() when unauthenticated != null:
-return unauthenticated(_that);case _:
+return unauthenticated(_that);case _UpdateProfileLoading() when updateProfileLoading != null:
+return updateProfileLoading(_that);case _UpdateProfileSuccess() when updateProfileSuccess != null:
+return updateProfileSuccess(_that);case _UpdateProfileFailure() when updateProfileFailure != null:
+return updateProfileFailure(_that);case _:
   return null;
 
 }
@@ -134,7 +143,7 @@ return unauthenticated(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  initial,TResult Function()?  loading,TResult Function( UserEntity user)?  loaded,TResult Function( String message)?  failure,TResult Function()?  loggedOut,TResult Function()?  authenticated,TResult Function()?  unauthenticated,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  initial,TResult Function()?  loading,TResult Function( UserEntity user)?  loaded,TResult Function( String message)?  failure,TResult Function()?  loggedOut,TResult Function()?  authenticated,TResult Function()?  unauthenticated,TResult Function()?  updateProfileLoading,TResult Function( UserEntity user)?  updateProfileSuccess,TResult Function( String message)?  updateProfileFailure,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Initial() when initial != null:
 return initial();case _Loading() when loading != null:
@@ -143,7 +152,10 @@ return loaded(_that.user);case _Failure() when failure != null:
 return failure(_that.message);case _LoggedOut() when loggedOut != null:
 return loggedOut();case _Authenticated() when authenticated != null:
 return authenticated();case _Unauthenticated() when unauthenticated != null:
-return unauthenticated();case _:
+return unauthenticated();case _UpdateProfileLoading() when updateProfileLoading != null:
+return updateProfileLoading();case _UpdateProfileSuccess() when updateProfileSuccess != null:
+return updateProfileSuccess(_that.user);case _UpdateProfileFailure() when updateProfileFailure != null:
+return updateProfileFailure(_that.message);case _:
   return orElse();
 
 }
@@ -161,7 +173,7 @@ return unauthenticated();case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  initial,required TResult Function()  loading,required TResult Function( UserEntity user)  loaded,required TResult Function( String message)  failure,required TResult Function()  loggedOut,required TResult Function()  authenticated,required TResult Function()  unauthenticated,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  initial,required TResult Function()  loading,required TResult Function( UserEntity user)  loaded,required TResult Function( String message)  failure,required TResult Function()  loggedOut,required TResult Function()  authenticated,required TResult Function()  unauthenticated,required TResult Function()  updateProfileLoading,required TResult Function( UserEntity user)  updateProfileSuccess,required TResult Function( String message)  updateProfileFailure,}) {final _that = this;
 switch (_that) {
 case _Initial():
 return initial();case _Loading():
@@ -170,7 +182,10 @@ return loaded(_that.user);case _Failure():
 return failure(_that.message);case _LoggedOut():
 return loggedOut();case _Authenticated():
 return authenticated();case _Unauthenticated():
-return unauthenticated();}
+return unauthenticated();case _UpdateProfileLoading():
+return updateProfileLoading();case _UpdateProfileSuccess():
+return updateProfileSuccess(_that.user);case _UpdateProfileFailure():
+return updateProfileFailure(_that.message);}
 }
 /// A variant of `when` that fallback to returning `null`
 ///
@@ -184,7 +199,7 @@ return unauthenticated();}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  initial,TResult? Function()?  loading,TResult? Function( UserEntity user)?  loaded,TResult? Function( String message)?  failure,TResult? Function()?  loggedOut,TResult? Function()?  authenticated,TResult? Function()?  unauthenticated,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  initial,TResult? Function()?  loading,TResult? Function( UserEntity user)?  loaded,TResult? Function( String message)?  failure,TResult? Function()?  loggedOut,TResult? Function()?  authenticated,TResult? Function()?  unauthenticated,TResult? Function()?  updateProfileLoading,TResult? Function( UserEntity user)?  updateProfileSuccess,TResult? Function( String message)?  updateProfileFailure,}) {final _that = this;
 switch (_that) {
 case _Initial() when initial != null:
 return initial();case _Loading() when loading != null:
@@ -193,7 +208,10 @@ return loaded(_that.user);case _Failure() when failure != null:
 return failure(_that.message);case _LoggedOut() when loggedOut != null:
 return loggedOut();case _Authenticated() when authenticated != null:
 return authenticated();case _Unauthenticated() when unauthenticated != null:
-return unauthenticated();case _:
+return unauthenticated();case _UpdateProfileLoading() when updateProfileLoading != null:
+return updateProfileLoading();case _UpdateProfileSuccess() when updateProfileSuccess != null:
+return updateProfileSuccess(_that.user);case _UpdateProfileFailure() when updateProfileFailure != null:
+return updateProfileFailure(_that.message);case _:
   return null;
 
 }
@@ -492,5 +510,169 @@ String toString() {
 
 
 
+
+/// @nodoc
+
+
+class _UpdateProfileLoading implements AuthenticationState {
+  const _UpdateProfileLoading();
+  
+
+
+
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _UpdateProfileLoading);
+}
+
+
+@override
+int get hashCode => runtimeType.hashCode;
+
+@override
+String toString() {
+  return 'AuthenticationState.updateProfileLoading()';
+}
+
+
+}
+
+
+
+
+/// @nodoc
+
+
+class _UpdateProfileSuccess implements AuthenticationState {
+  const _UpdateProfileSuccess(this.user);
+  
+
+ final  UserEntity user;
+
+/// Create a copy of AuthenticationState
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$UpdateProfileSuccessCopyWith<_UpdateProfileSuccess> get copyWith => __$UpdateProfileSuccessCopyWithImpl<_UpdateProfileSuccess>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _UpdateProfileSuccess&&(identical(other.user, user) || other.user == user));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,user);
+
+@override
+String toString() {
+  return 'AuthenticationState.updateProfileSuccess(user: $user)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$UpdateProfileSuccessCopyWith<$Res> implements $AuthenticationStateCopyWith<$Res> {
+  factory _$UpdateProfileSuccessCopyWith(_UpdateProfileSuccess value, $Res Function(_UpdateProfileSuccess) _then) = __$UpdateProfileSuccessCopyWithImpl;
+@useResult
+$Res call({
+ UserEntity user
+});
+
+
+
+
+}
+/// @nodoc
+class __$UpdateProfileSuccessCopyWithImpl<$Res>
+    implements _$UpdateProfileSuccessCopyWith<$Res> {
+  __$UpdateProfileSuccessCopyWithImpl(this._self, this._then);
+
+  final _UpdateProfileSuccess _self;
+  final $Res Function(_UpdateProfileSuccess) _then;
+
+/// Create a copy of AuthenticationState
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') $Res call({Object? user = null,}) {
+  return _then(_UpdateProfileSuccess(
+null == user ? _self.user : user // ignore: cast_nullable_to_non_nullable
+as UserEntity,
+  ));
+}
+
+
+}
+
+/// @nodoc
+
+
+class _UpdateProfileFailure implements AuthenticationState {
+  const _UpdateProfileFailure(this.message);
+  
+
+ final  String message;
+
+/// Create a copy of AuthenticationState
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$UpdateProfileFailureCopyWith<_UpdateProfileFailure> get copyWith => __$UpdateProfileFailureCopyWithImpl<_UpdateProfileFailure>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _UpdateProfileFailure&&(identical(other.message, message) || other.message == message));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,message);
+
+@override
+String toString() {
+  return 'AuthenticationState.updateProfileFailure(message: $message)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$UpdateProfileFailureCopyWith<$Res> implements $AuthenticationStateCopyWith<$Res> {
+  factory _$UpdateProfileFailureCopyWith(_UpdateProfileFailure value, $Res Function(_UpdateProfileFailure) _then) = __$UpdateProfileFailureCopyWithImpl;
+@useResult
+$Res call({
+ String message
+});
+
+
+
+
+}
+/// @nodoc
+class __$UpdateProfileFailureCopyWithImpl<$Res>
+    implements _$UpdateProfileFailureCopyWith<$Res> {
+  __$UpdateProfileFailureCopyWithImpl(this._self, this._then);
+
+  final _UpdateProfileFailure _self;
+  final $Res Function(_UpdateProfileFailure) _then;
+
+/// Create a copy of AuthenticationState
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') $Res call({Object? message = null,}) {
+  return _then(_UpdateProfileFailure(
+null == message ? _self.message : message // ignore: cast_nullable_to_non_nullable
+as String,
+  ));
+}
+
+
+}
 
 // dart format on

@@ -52,4 +52,16 @@ abstract class AuthApiClient {
   Future<ApiResponseModel<UserModel>> getMe(
     @Header('Authorization') String token,
   );
+
+  // POST /api/v1/update-user/{id}
+  // Updates the profile of the user with the given id.
+  // Requires Authorization header:
+  //   Bearer <token>.
+  // Body parameters: name, email, phone_number, password, c_password.
+  @POST('/api/v1/update-user/{userId}')
+  Future<ApiResponseModel<UserModel>> updateProfile(
+    @Path('userId') int userId,
+    @Header('Authorization') String token,
+    @Body() Map<String, dynamic> body,
+  );
 }

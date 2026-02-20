@@ -12,4 +12,10 @@ sealed class AuthenticationState with _$AuthenticationState {
   const factory AuthenticationState.loggedOut() = _LoggedOut;
   const factory AuthenticationState.authenticated() = _Authenticated;
   const factory AuthenticationState.unauthenticated() = _Unauthenticated;
+  const factory AuthenticationState.updateProfileLoading() =
+      _UpdateProfileLoading;
+  const factory AuthenticationState.updateProfileSuccess(UserEntity user) =
+      _UpdateProfileSuccess;
+  const factory AuthenticationState.updateProfileFailure(String message) =
+      _UpdateProfileFailure;
 }

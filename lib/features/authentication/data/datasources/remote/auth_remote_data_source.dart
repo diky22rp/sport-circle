@@ -16,4 +16,15 @@ abstract class AuthRemoteDataSource {
 
   /// Fetches the profile of the currently authenticated user using the token.
   Future<UserModel> getMe({required String token});
+
+  Future<UserModel> updateProfile({
+    required int userId,
+    required String email,
+    required String name,
+    required String phoneNumber,
+    required String password,
+    required String cPassword,
+    required String token,
+    String role = 'user',
+  });
 }

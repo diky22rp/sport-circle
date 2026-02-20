@@ -100,4 +100,39 @@ class AuthRepositoryImpl implements AuthRepository {
         return ServerFailure(e.message ?? 'Unknown error');
     }
   }
+
+  @override
+  Future<Either<Failure, UserEntity>> updateProfile({
+    required String email,
+    required String name,
+    required String phoneNumber,
+    required String password,
+    required String cPassword,
+  }) async {
+    try {
+      final token = await _localDataSource.getToken();
+      if (token == null || token.isEmpty) {
+        return Left(
+          ServerFailure('Token tidak ditemukan, silakan login ulang'),
+        );
+      }
+      final user = await _remoteDataSource.getMe(token: token);
+      final userId = int.tryParse(user.id.toString()) ?? 0;
+
+      final updatedUser = await _remoteDataSource.updateProfile(
+        userId: userId,
+        token: token,
+        email: email,
+        name: name,
+        phoneNumber: phoneNumber,
+        password: password,
+        cPassword: cPassword,
+      );
+      return Right(updatedUser);
+    } on DioException catch (e) {
+      return Left(_mapDioToFailure(e));
+    } catch (e) {
+      return Left(ServerFailure(e.toString()));
+    }
+  }
 }

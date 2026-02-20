@@ -8,6 +8,7 @@ class ApiConstants {
   static const String login = '/api/v1/login';
   static const String register = '/api/v1/register';
   static const String me = '/api/v1/me';
+  static const String updateUser = '/api/v1/update-user';
 
   // Sport Categories
   static const String getSportCategory = '/api/v1/sport-categories';

@@ -35,6 +35,8 @@ import 'package:sport_circle/features/authentication/domain/usecases/login_useca
     as _i36;
 import 'package:sport_circle/features/authentication/domain/usecases/register_usecase.dart'
     as _i499;
+import 'package:sport_circle/features/authentication/domain/usecases/update_profile_usecase.dart'
+    as _i187;
 import 'package:sport_circle/features/authentication/presentation/bloc/authentication/authentication_bloc.dart'
     as _i760;
 import 'package:sport_circle/features/authentication/presentation/bloc/login/login_bloc.dart'
@@ -108,6 +110,9 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i499.RegisterUseCase>(
       () => _i499.RegisterUseCase(gh<_i896.AuthRepository>()),
     );
+    gh.lazySingleton<_i187.UpdateProfileUseCase>(
+      () => _i187.UpdateProfileUseCase(gh<_i896.AuthRepository>()),
+    );
     gh.lazySingleton<_i875.CategoryRepository>(
       () => _i91.CategoryRepositoryImpl(gh<_i127.CategoryRemoteDataSource>()),
     );
@@ -115,6 +120,7 @@ extension GetItInjectableX on _i174.GetIt {
       () => _i760.AuthenticationBloc(
         gh<_i209.GetMeUseCase>(),
         gh<_i110.CheckTokenUseCase>(),
+        gh<_i187.UpdateProfileUseCase>(),
       ),
     );
     gh.factory<_i112.LoginBloc>(() => _i112.LoginBloc(gh<_i36.LoginUseCase>()));
