@@ -3,15 +3,6 @@ import 'package:sport_circle/features/authentication/domain/entities/user_entity
 
 part 'user_model.g.dart';
 
-// UserModel maps the user object from the API response.
-//
-// Field mapping:
-// - id:         User ID (always stored as String)
-// - name:       User's name
-// - email:      User's email
-// - role:       User's role (e.g., "user")
-// - phoneNumber: Phone number (snake_case in API)
-// - token:      Auth token (present in login/register response)
 @JsonSerializable()
 class UserModel extends UserEntity {
   // All required fields must be provided. Optional fields may be null.

@@ -4,7 +4,8 @@ import 'package:sport_circle/features/authentication/presentation/pages/login_pa
 import 'package:sport_circle/features/authentication/presentation/pages/register_page.dart';
 import 'package:sport_circle/features/home/presentation/home_screen.dart';
 import 'package:sport_circle/features/main/presentation/main_page.dart';
-import 'package:sport_circle/features/splash/splash_screen.dart';
+import 'package:sport_circle/features/profile/presentation/profile_screen.dart';
+import 'package:sport_circle/features/splash/presentation/splash_screen.dart';
 
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
 
@@ -12,12 +13,22 @@ final GoRouter appRouter = GoRouter(
   navigatorKey: _rootNavigatorKey,
   initialLocation: '/',
   routes: [
-    GoRoute(path: '/', builder: (context, state) => const SplashScreen()),
-    GoRoute(path: '/login', builder: (context, state) => const LoginPage()),
+    GoRoute(
+      path: '/',
+      name: 'splash',
+      builder: (context, state) => const SplashScreen(),
+    ),
+    GoRoute(
+      path: '/login',
+      name: 'login',
+      builder: (context, state) => const LoginPage(),
+    ),
     GoRoute(
       path: '/register',
+      name: 'register',
       builder: (context, state) => const RegisterPage(),
     ),
+
     // Shell route untuk bottom bar
     StatefulShellRoute.indexedStack(
       builder: (context, state, navigationShell) {
@@ -28,6 +39,7 @@ final GoRouter appRouter = GoRouter(
           routes: [
             GoRoute(
               path: '/home',
+              name: 'home',
               builder: (context, state) => const HomeScreen(),
             ),
           ],
@@ -36,7 +48,8 @@ final GoRouter appRouter = GoRouter(
           routes: [
             GoRoute(
               path: '/profile',
-              builder: (context, state) => const SplashScreen(),
+              name: 'profile',
+              builder: (context, state) => const ProfileScreen(),
             ),
           ],
         ),
@@ -44,7 +57,17 @@ final GoRouter appRouter = GoRouter(
           routes: [
             GoRoute(
               path: '/settings',
+              name: 'settings',
               builder: (context, state) => const HomeScreen(),
+            ),
+          ],
+        ),
+        StatefulShellBranch(
+          routes: [
+            GoRoute(
+              path: '/profile',
+              name: 'profile',
+              builder: (context, state) => const ProfileScreen(),
             ),
           ],
         ),

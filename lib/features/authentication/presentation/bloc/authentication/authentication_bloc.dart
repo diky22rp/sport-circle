@@ -28,6 +28,8 @@ class AuthenticationBloc
           );
         },
         logout: () async {
+          emit(const AuthenticationState.loading());
+          emit(const AuthenticationState.unauthenticated());
           emit(const AuthenticationState.loggedOut());
         },
         checkToken: () async {

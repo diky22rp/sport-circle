@@ -6,8 +6,6 @@ import 'package:sport_circle/core/presentation/widgets/app_snackbar.dart';
 import 'package:sport_circle/core/presentation/widgets/input_field.dart';
 import 'package:sport_circle/core/utils/validators.dart';
 import 'package:sport_circle/features/authentication/presentation/bloc/login/login_bloc.dart';
-import 'package:sport_circle/features/authentication/presentation/bloc/login/login_event.dart';
-import 'package:sport_circle/features/authentication/presentation/bloc/login/login_state.dart';
 
 class LoginPage extends StatelessWidget {
   const LoginPage({super.key});
@@ -54,7 +52,8 @@ class _LoginViewState extends State<_LoginView> {
               message: 'Welcome, ${user.name}!',
               type: AppSnackbarType.success,
             );
-            context.go('/home');
+
+            context.goNamed('home');
           },
           failure: (message) {
             AppSnackbar.show(

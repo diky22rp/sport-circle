@@ -58,7 +58,7 @@ class _RegisterViewState extends State<_RegisterView> {
               message: 'Berhasil daftar, ${user.name}!',
               type: AppSnackbarType.success,
             );
-            context.go('/login');
+            context.goNamed('login');
           },
           failure: (message) {
             AppSnackbar.show(
@@ -227,7 +227,7 @@ class _RegisterViewState extends State<_RegisterView> {
                         ),
                       const SizedBox(height: 16),
                       TextButton(
-                        onPressed: () => context.go('/login'),
+                        onPressed: () => context.goNamed('login'),
                         style: TextButton.styleFrom(
                           foregroundColor: theme.colorScheme.primary,
                           textStyle: theme.textTheme.bodyMedium?.copyWith(

@@ -38,8 +38,8 @@ class _HomeScreenState extends State<HomeScreen> {
     return BlocListener<AuthenticationBloc, AuthenticationState>(
       listener: (context, state) {
         state.whenOrNull(
-          loggedOut: () => context.go('/login'),
-          unauthenticated: () => context.go('/login'),
+          loggedOut: () => context.goNamed('login'),
+          unauthenticated: () => context.goNamed('login'),
           failure: (message) => ScaffoldMessenger.of(
             context,
           ).showSnackBar(SnackBar(content: Text(message))),
