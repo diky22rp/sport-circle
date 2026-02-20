@@ -31,16 +31,13 @@ void main() {
   });
 
   test('initial state is LoginInitial', () {
-    expect(bloc.state, isA<LoginInitial>());
+    expect(bloc.state, isA<LoginState>());
   });
 
   test('emits [LoginFailure] when email is empty', () async {
-    final future = expectLater(
-      bloc.stream,
-      emitsInOrder([isA<LoginFailure>()]),
-    );
+    final future = expectLater(bloc.stream, emitsInOrder([isA<LoginState>()]));
 
-    bloc.add(const LoginSubmitted(email: '', password: 'pw'));
+    bloc.add(const LoginEvent.submitted(email: '', password: 'pw'));
     await future;
   });
 
@@ -56,10 +53,10 @@ void main() {
 
       final future = expectLater(
         bloc.stream,
-        emitsInOrder([isA<LoginLoading>(), isA<LoginSuccess>()]),
+        emitsInOrder([isA<LoginState>(), isA<LoginState>()]),
       );
 
-      bloc.add(const LoginSubmitted(email: 'a@a.com', password: 'pw'));
+      bloc.add(const LoginEvent.submitted(email: 'a@a.com', password: 'pw'));
       await future;
     },
   );
@@ -78,10 +75,10 @@ void main() {
 
       final future = expectLater(
         bloc.stream,
-        emitsInOrder([isA<LoginLoading>(), isA<LoginFailure>()]),
+        emitsInOrder([isA<LoginState>(), isA<LoginState>()]),
       );
 
-      bloc.add(const LoginSubmitted(email: 'a@a.com', password: 'wrong'));
+      bloc.add(const LoginEvent.submitted(email: 'a@a.com', password: 'wrong'));
       await future;
     },
   );

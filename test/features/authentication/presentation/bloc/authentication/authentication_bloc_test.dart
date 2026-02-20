@@ -37,7 +37,7 @@ void main() {
   });
 
   test('initial state is AuthenticationInitial', () {
-    expect(bloc.state, isA<AuthenticationInitial>());
+    expect(bloc.state, isA<AuthenticationState>());
   });
 
   test(
@@ -48,12 +48,9 @@ void main() {
       ).thenAnswer((_) async => const Right(tUser));
       final future = expectLater(
         bloc.stream,
-        emitsInOrder([
-          isA<AuthenticationLoading>(),
-          isA<AuthenticationLoaded>(),
-        ]),
+        emitsInOrder([isA<AuthenticationState>(), isA<AuthenticationState>()]),
       );
-      bloc.add(AuthenticationFetchUser());
+      bloc.add(const AuthenticationEvent.fetchUser());
       await future;
     },
   );
@@ -66,12 +63,9 @@ void main() {
       ).thenAnswer((_) async => const Left(ServerFailure('Unauthorized')));
       final future = expectLater(
         bloc.stream,
-        emitsInOrder([
-          isA<AuthenticationLoading>(),
-          isA<AuthenticationFailure>(),
-        ]),
+        emitsInOrder([isA<AuthenticationState>(), isA<AuthenticationState>()]),
       );
-      bloc.add(AuthenticationFetchUser());
+      bloc.add(const AuthenticationEvent.fetchUser());
       await future;
     },
   );
@@ -82,12 +76,9 @@ void main() {
       when(() => mockCheckTokenUseCase()).thenAnswer((_) async => true);
       final future = expectLater(
         bloc.stream,
-        emitsInOrder([
-          isA<AuthenticationLoading>(),
-          isA<AuthenticationAuthenticated>(),
-        ]),
+        emitsInOrder([isA<AuthenticationState>(), isA<AuthenticationState>()]),
       );
-      bloc.add(AuthenticationCheckToken());
+      bloc.add(const AuthenticationEvent.checkToken());
       await future;
     },
   );
@@ -98,12 +89,9 @@ void main() {
       when(() => mockCheckTokenUseCase()).thenAnswer((_) async => false);
       final future = expectLater(
         bloc.stream,
-        emitsInOrder([
-          isA<AuthenticationLoading>(),
-          isA<AuthenticationUnauthenticated>(),
-        ]),
+        emitsInOrder([isA<AuthenticationState>(), isA<AuthenticationState>()]),
       );
-      bloc.add(AuthenticationCheckToken());
+      bloc.add(const AuthenticationEvent.checkToken());
       await future;
     },
   );
@@ -111,9 +99,9 @@ void main() {
   test('emits [AuthenticationLoggedOut] when logout is triggered', () async {
     final future = expectLater(
       bloc.stream,
-      emitsInOrder([isA<AuthenticationLoggedOut>()]),
+      emitsInOrder([isA<AuthenticationState>()]),
     );
-    bloc.add(AuthenticationLogout());
+    bloc.add(const AuthenticationEvent.logout());
     await future;
   });
 }

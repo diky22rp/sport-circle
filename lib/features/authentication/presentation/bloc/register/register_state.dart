@@ -1,26 +1,12 @@
-import 'package:equatable/equatable.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:sport_circle/features/authentication/domain/entities/user_entity.dart';
 
-abstract class RegisterState extends Equatable {
-  const RegisterState();
-  @override
-  List<Object?> get props => [];
-}
+part 'register_state.freezed.dart';
 
-class RegisterInitial extends RegisterState {}
-
-class RegisterLoading extends RegisterState {}
-
-class RegisterSuccess extends RegisterState {
-  final UserEntity user;
-  const RegisterSuccess(this.user);
-  @override
-  List<Object?> get props => [user];
-}
-
-class RegisterFailure extends RegisterState {
-  final String message;
-  const RegisterFailure(this.message);
-  @override
-  List<Object?> get props => [message];
+@freezed
+sealed class RegisterState with _$RegisterState {
+  const factory RegisterState.initial() = _Initial;
+  const factory RegisterState.loading() = _Loading;
+  const factory RegisterState.success(UserEntity user) = _Success;
+  const factory RegisterState.failure(String message) = _Failure;
 }

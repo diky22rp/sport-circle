@@ -5,28 +5,27 @@ import 'package:sport_circle/features/authentication/domain/usecases/login_useca
 import 'login_event.dart';
 import 'login_state.dart';
 
+export 'login_event.dart';
+export 'login_state.dart';
+
 @injectable
 class LoginBloc extends Bloc<LoginEvent, LoginState> {
-  final LoginUseCase _loginUseCase;
+  final LoginUseCase loginUseCase;
 
-  LoginBloc(this._loginUseCase) : super(LoginInitial()) {
-    on<LoginSubmitted>(_onLoginSubmitted);
-  }
+  LoginBloc(this.loginUseCase) : super(const LoginState.initial()) {
+    on<LoginEvent>((event, emit) async {
+      await event.when(
+        submitted: (email, password) async {
+          emit(const LoginState.loading());
 
-  Future<void> _onLoginSubmitted(
-    LoginSubmitted event,
-    Emitter<LoginState> emit,
-  ) async {
-    emit(LoginLoading());
+          final result = await loginUseCase(email: email, password: password);
 
-    final result = await _loginUseCase(
-      email: event.email,
-      password: event.password,
-    );
-
-    result.fold(
-      (failure) => emit(LoginFailure(failure.message)),
-      (user) => emit(LoginSuccess(user)),
-    );
+          result.fold(
+            (failure) => emit(LoginState.failure(failure.message)),
+            (user) => emit(LoginState.success(user)),
+          );
+        },
+      );
+    });
   }
 }

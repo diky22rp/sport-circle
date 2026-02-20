@@ -1,13 +1,10 @@
-import 'package:equatable/equatable.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-abstract class AuthenticationEvent extends Equatable {
-  const AuthenticationEvent();
-  @override
-  List<Object?> get props => [];
+part 'authentication_event.freezed.dart';
+
+@freezed
+sealed class AuthenticationEvent with _$AuthenticationEvent {
+  const factory AuthenticationEvent.fetchUser() = _FetchUser;
+  const factory AuthenticationEvent.logout() = _Logout;
+  const factory AuthenticationEvent.checkToken() = _CheckToken;
 }
-
-class AuthenticationFetchUser extends AuthenticationEvent {}
-
-class AuthenticationLogout extends AuthenticationEvent {}
-
-class AuthenticationCheckToken extends AuthenticationEvent {}

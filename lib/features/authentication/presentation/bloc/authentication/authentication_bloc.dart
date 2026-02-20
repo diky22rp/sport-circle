@@ -6,6 +6,9 @@ import 'package:sport_circle/features/authentication/domain/usecases/get_me_usec
 import 'authentication_event.dart';
 import 'authentication_state.dart';
 
+export 'authentication_event.dart';
+export 'authentication_state.dart';
+
 @injectable
 class AuthenticationBloc
     extends Bloc<AuthenticationEvent, AuthenticationState> {
@@ -13,44 +16,31 @@ class AuthenticationBloc
   final CheckTokenUseCase _checkTokenUseCase;
 
   AuthenticationBloc(this._getMeUseCase, this._checkTokenUseCase)
-    : super(AuthenticationInitial()) {
-    on<AuthenticationFetchUser>(_onFetchUser);
-    on<AuthenticationLogout>(_onLogout);
-    on<AuthenticationCheckToken>(_onCheckToken);
-    add(AuthenticationCheckToken()); // Trigger event otomatis saat bloc dibuat
-  }
-
-  Future<void> _onFetchUser(
-    AuthenticationFetchUser event,
-    Emitter<AuthenticationState> emit,
-  ) async {
-    emit(AuthenticationLoading());
-
-    final result = await _getMeUseCase();
-
-    result.fold(
-      (failure) => emit(AuthenticationFailure(failure.message)),
-      (user) => emit(AuthenticationLoaded(user)),
-    );
-  }
-
-  Future<void> _onLogout(
-    AuthenticationLogout event,
-    Emitter<AuthenticationState> emit,
-  ) async {
-    emit(AuthenticationLoggedOut());
-  }
-
-  Future<void> _onCheckToken(
-    AuthenticationCheckToken event,
-    Emitter<AuthenticationState> emit,
-  ) async {
-    emit(AuthenticationLoading());
-    final hasToken = await _checkTokenUseCase();
-    if (hasToken) {
-      emit(AuthenticationAuthenticated());
-    } else {
-      emit(AuthenticationUnauthenticated());
-    }
+    : super(const AuthenticationState.initial()) {
+    on<AuthenticationEvent>((event, emit) async {
+      await event.when(
+        fetchUser: () async {
+          emit(const AuthenticationState.loading());
+          final result = await _getMeUseCase();
+          result.fold(
+            (failure) => emit(AuthenticationState.failure(failure.message)),
+            (user) => emit(AuthenticationState.loaded(user)),
+          );
+        },
+        logout: () async {
+          emit(const AuthenticationState.loggedOut());
+        },
+        checkToken: () async {
+          emit(const AuthenticationState.loading());
+          final hasToken = await _checkTokenUseCase();
+          if (hasToken) {
+            emit(const AuthenticationState.authenticated());
+          } else {
+            emit(const AuthenticationState.unauthenticated());
+          }
+        },
+      );
+    });
+    add(const AuthenticationEvent.checkToken());
   }
 }

@@ -51,26 +51,29 @@ class _RegisterViewState extends State<_RegisterView> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return Scaffold(
-      body: BlocConsumer<RegisterBloc, RegisterState>(
-        listener: (context, state) {
-          if (state is RegisterSuccess) {
+    return BlocListener<RegisterBloc, RegisterState>(
+      listener: (context, state) {
+        state.whenOrNull(
+          success: (user) {
             AppSnackbar.show(
               context,
-              message: 'Berhasil daftar, ${state.user.name}!',
+              message: 'Berhasil daftar, ${user.name}!',
               type: AppSnackbarType.success,
             );
-            context.go('/login'); // kembali ke login
-          } else if (state is RegisterFailure) {
+            context.go('/login');
+          },
+          failure: (message) {
             AppSnackbar.show(
               context,
-              message: state.message,
+              message: message,
               type: AppSnackbarType.error,
             );
-          }
-        },
+          },
+        );
+      },
+      child: BlocBuilder<RegisterBloc, RegisterState>(
         builder: (context, state) {
+          final theme = Theme.of(context);
           return Center(
             child: SingleChildScrollView(
               child: Container(
@@ -96,7 +99,7 @@ class _RegisterViewState extends State<_RegisterView> {
                   children: [
                     Text(
                       'Ayo Gabung, Biar Terhubung!',
-                      style: theme.textTheme.headlineMedium?.copyWith(
+                      style: theme.textTheme.titleLarge?.copyWith(
                         color: theme.colorScheme.primary,
                         fontWeight: FontWeight.bold,
                       ),
@@ -147,7 +150,10 @@ class _RegisterViewState extends State<_RegisterView> {
                       icon: Icons.lock_outline,
                     ),
                     const SizedBox(height: 24),
-                    if (state is RegisterLoading)
+                    if (state.maybeWhen(
+                      loading: () => true,
+                      orElse: () => false,
+                    ))
                       const Center(child: CircularProgressIndicator())
                     else
                       SizedBox(
@@ -209,7 +215,7 @@ class _RegisterViewState extends State<_RegisterView> {
                               return;
                             }
                             context.read<RegisterBloc>().add(
-                              RegisterSubmitted(
+                              RegisterEvent.submitted(
                                 name: _nameController.text,
                                 email: _emailController.text,
                                 password: _passwordController.text,
@@ -217,7 +223,7 @@ class _RegisterViewState extends State<_RegisterView> {
                               ),
                             );
                           },
-                          child: const Text('Gas Daftar!'),
+                          child: const Text('Gas Daftar'),
                         ),
                       ),
                     const SizedBox(height: 16),

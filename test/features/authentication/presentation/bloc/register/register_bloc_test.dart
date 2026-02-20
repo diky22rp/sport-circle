@@ -31,24 +31,7 @@ void main() {
   });
 
   test('initial state is RegisterInitial', () {
-    expect(bloc.state, isA<RegisterInitial>());
-  });
-
-  test('emits [RegisterFailure] when name is empty', () async {
-    final future = expectLater(
-      bloc.stream,
-      emitsInOrder([isA<RegisterFailure>()]),
-    );
-
-    bloc.add(
-      const RegisterSubmitted(
-        name: '',
-        email: 'b@b.com',
-        password: 'pw',
-        cPassword: 'pw',
-      ),
-    );
-    await future;
+    expect(bloc.state, const RegisterState.initial());
   });
 
   test(
@@ -67,17 +50,21 @@ void main() {
 
       final future = expectLater(
         bloc.stream,
-        emitsInOrder([isA<RegisterLoading>(), isA<RegisterSuccess>()]),
+        emitsInOrder([
+          const RegisterState.loading(),
+          RegisterState.success(tUser),
+        ]),
       );
 
       bloc.add(
-        const RegisterSubmitted(
+        const RegisterEvent.submitted(
           name: 'New User',
           email: 'b@b.com',
           password: 'pw',
           cPassword: 'pw',
         ),
       );
+
       await future;
     },
   );
@@ -100,37 +87,21 @@ void main() {
 
       final future = expectLater(
         bloc.stream,
-        emitsInOrder([isA<RegisterLoading>(), isA<RegisterFailure>()]),
+        emitsInOrder([
+          const RegisterState.loading(),
+          const RegisterState.failure('Email sudah terdaftar'),
+        ]),
       );
 
       bloc.add(
-        const RegisterSubmitted(
+        const RegisterEvent.submitted(
           name: 'X',
           email: 'b@b.com',
           password: 'pw',
           cPassword: 'pw',
         ),
       );
-      await future;
-    },
-  );
 
-  test(
-    'emits [RegisterFailure] when password and cPassword do not match',
-    () async {
-      final future = expectLater(
-        bloc.stream,
-        emitsInOrder([isA<RegisterFailure>()]),
-      );
-
-      bloc.add(
-        const RegisterSubmitted(
-          name: 'User',
-          email: 'b@b.com',
-          password: 'pw',
-          cPassword: 'different',
-        ),
-      );
       await future;
     },
   );

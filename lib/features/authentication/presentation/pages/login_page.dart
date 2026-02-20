@@ -44,27 +44,30 @@ class _LoginViewState extends State<_LoginView> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return Scaffold(
-      body: BlocConsumer<LoginBloc, LoginState>(
-        listener: (context, state) async {
-          if (state is LoginSuccess) {
+    return BlocListener<LoginBloc, LoginState>(
+      listener: (context, state) {
+        state.whenOrNull(
+          success: (user) {
             if (!context.mounted) return;
             AppSnackbar.show(
               context,
-              message: 'Welcome, ${state.user.name}!',
+              message: 'Welcome, ${user.name}!',
               type: AppSnackbarType.success,
             );
             context.go('/home');
-          } else if (state is LoginFailure) {
+          },
+          failure: (message) {
             AppSnackbar.show(
               context,
-              message: state.message,
+              message: message,
               type: AppSnackbarType.error,
             );
-          }
-        },
+          },
+        );
+      },
+      child: BlocBuilder<LoginBloc, LoginState>(
         builder: (context, state) {
+          final theme = Theme.of(context);
           return Center(
             child: SingleChildScrollView(
               child: Container(
@@ -90,7 +93,7 @@ class _LoginViewState extends State<_LoginView> {
                   children: [
                     Text(
                       'Masuk Dulu, Biar Gak Ketinggalan!',
-                      style: theme.textTheme.headlineMedium?.copyWith(
+                      style: theme.textTheme.titleLarge?.copyWith(
                         color: theme.colorScheme.primary,
                         fontWeight: FontWeight.bold,
                       ),
@@ -124,7 +127,10 @@ class _LoginViewState extends State<_LoginView> {
                       icon: Icons.lock,
                     ),
                     const SizedBox(height: 24),
-                    if (state is LoginLoading)
+                    if (state.maybeWhen(
+                      loading: () => true,
+                      orElse: () => false,
+                    ))
                       const Center(child: CircularProgressIndicator())
                     else
                       SizedBox(
@@ -168,13 +174,13 @@ class _LoginViewState extends State<_LoginView> {
                               return;
                             }
                             context.read<LoginBloc>().add(
-                              LoginSubmitted(
+                              LoginEvent.submitted(
                                 email: _emailController.text,
                                 password: _passwordController.text,
                               ),
                             );
                           },
-                          child: const Text('Gas Login!'),
+                          child: const Text('Gas Login'),
                         ),
                       ),
                     const SizedBox(height: 16),

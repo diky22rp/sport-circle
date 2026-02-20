@@ -86,12 +86,18 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^5.0.0
-  build_runner: 2.10.4
-  freezed: ^3.2.3
+  build_runner: ^2.11.1
+  freezed: ^3.2.5
   json_serializable: ^6.11.2
   injectable_generator: ^2.9.1
   retrofit_generator: ^10.2.3  # Generator Retrofit — buat auto-generate kode dari annotation
   mocktail: ^1.0.4
+  flutter_launcher_icons: ^0.13.1
+
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "assets/logo.png.png"
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

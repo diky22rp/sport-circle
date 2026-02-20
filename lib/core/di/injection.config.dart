@@ -41,6 +41,20 @@ import 'package:sport_circle/features/authentication/presentation/bloc/login/log
     as _i112;
 import 'package:sport_circle/features/authentication/presentation/bloc/register/register_bloc.dart'
     as _i435;
+import 'package:sport_circle/features/category/data/datasources/category_api_client.dart'
+    as _i636;
+import 'package:sport_circle/features/category/data/datasources/remote/category_remote_data_source.dart'
+    as _i127;
+import 'package:sport_circle/features/category/data/datasources/remote/category_remote_data_source_impl.dart'
+    as _i129;
+import 'package:sport_circle/features/category/data/repositories/category_repository_impl.dart'
+    as _i91;
+import 'package:sport_circle/features/category/domain/repositories/category_repository.dart'
+    as _i875;
+import 'package:sport_circle/features/category/domain/usecases/get_sport_categories.dart'
+    as _i233;
+import 'package:sport_circle/features/category/presentation/bloc/category_bloc.dart'
+    as _i296;
 
 extension GetItInjectableX on _i174.GetIt {
   // initializes the registration of main-scope dependencies inside of GetIt
@@ -64,8 +78,17 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i734.AuthApiClient>(
       () => registerModule.authApiClient(gh<_i361.Dio>()),
     );
+    gh.lazySingleton<_i636.CategoryApiClient>(
+      () => registerModule.categoryApiClient(gh<_i361.Dio>()),
+    );
     gh.lazySingleton<_i867.AuthRemoteDataSource>(
       () => _i599.AuthRemoteDataSourceImpl(gh<_i734.AuthApiClient>()),
+    );
+    gh.lazySingleton<_i127.CategoryRemoteDataSource>(
+      () => _i129.CategoryRemoteDataSourceImpl(
+        gh<_i636.CategoryApiClient>(),
+        gh<_i531.AuthLocalDataSource>(),
+      ),
     );
     gh.lazySingleton<_i896.AuthRepository>(
       () => _i152.AuthRepositoryImpl(
@@ -85,6 +108,9 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i499.RegisterUseCase>(
       () => _i499.RegisterUseCase(gh<_i896.AuthRepository>()),
     );
+    gh.lazySingleton<_i875.CategoryRepository>(
+      () => _i91.CategoryRepositoryImpl(gh<_i127.CategoryRemoteDataSource>()),
+    );
     gh.factory<_i760.AuthenticationBloc>(
       () => _i760.AuthenticationBloc(
         gh<_i209.GetMeUseCase>(),
@@ -94,6 +120,15 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i112.LoginBloc>(() => _i112.LoginBloc(gh<_i36.LoginUseCase>()));
     gh.factory<_i435.RegisterBloc>(
       () => _i435.RegisterBloc(gh<_i499.RegisterUseCase>()),
+    );
+    gh.lazySingleton<_i233.GetSportCategories>(
+      () => _i233.GetSportCategories(gh<_i875.CategoryRepository>()),
+    );
+    gh.factory<_i296.CategoryBloc>(
+      () => _i296.CategoryBloc(
+        gh<_i233.GetSportCategories>(),
+        gh<_i760.AuthenticationBloc>(),
+      ),
     );
     return this;
   }

@@ -11,8 +11,10 @@ ApiResponseModel<T> _$ApiResponseModelFromJson<T>(
   T Function(Object? json) fromJsonT,
 ) => ApiResponseModel<T>(
   success: json['success'] as bool?,
+  error: json['error'] as bool?,
   message: json['message'] as String?,
   data: _$nullableGenericFromJson(json['data'], fromJsonT),
+  result: _$nullableGenericFromJson(json['result'], fromJsonT),
   token: json['token'] as String?,
 );
 
@@ -21,8 +23,10 @@ Map<String, dynamic> _$ApiResponseModelToJson<T>(
   Object? Function(T value) toJsonT,
 ) => <String, dynamic>{
   'success': instance.success,
+  'error': instance.error,
   'message': instance.message,
   'data': _$nullableGenericToJson(instance.data, toJsonT),
+  'result': _$nullableGenericToJson(instance.result, toJsonT),
   'token': instance.token,
 };
 

@@ -1,5 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:sport_circle/features/category/presentation/bloc/category_bloc.dart';
 import 'core/di/injection.dart';
 import 'core/presentation/bloc_observer.dart';
 import 'core/themes/app_theme.dart';
@@ -14,6 +15,7 @@ void main() async {
     MultiBlocProvider(
       providers: [
         BlocProvider(create: (context) => getIt<AuthenticationBloc>()),
+        BlocProvider(create: (context) => getIt<CategoryBloc>()),
       ],
       child: const SportCircleApp(),
     ),

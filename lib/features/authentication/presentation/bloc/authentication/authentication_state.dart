@@ -1,32 +1,15 @@
-import 'package:equatable/equatable.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:sport_circle/features/authentication/domain/entities/user_entity.dart';
 
-abstract class AuthenticationState extends Equatable {
-  const AuthenticationState();
-  @override
-  List<Object?> get props => [];
+part 'authentication_state.freezed.dart';
+
+@freezed
+sealed class AuthenticationState with _$AuthenticationState {
+  const factory AuthenticationState.initial() = _Initial;
+  const factory AuthenticationState.loading() = _Loading;
+  const factory AuthenticationState.loaded(UserEntity user) = _Loaded;
+  const factory AuthenticationState.failure(String message) = _Failure;
+  const factory AuthenticationState.loggedOut() = _LoggedOut;
+  const factory AuthenticationState.authenticated() = _Authenticated;
+  const factory AuthenticationState.unauthenticated() = _Unauthenticated;
 }
-
-class AuthenticationInitial extends AuthenticationState {}
-
-class AuthenticationLoading extends AuthenticationState {}
-
-class AuthenticationLoaded extends AuthenticationState {
-  final UserEntity user;
-  const AuthenticationLoaded(this.user);
-  @override
-  List<Object?> get props => [user];
-}
-
-class AuthenticationFailure extends AuthenticationState {
-  final String message;
-  const AuthenticationFailure(this.message);
-  @override
-  List<Object?> get props => [message];
-}
-
-class AuthenticationLoggedOut extends AuthenticationState {}
-
-class AuthenticationAuthenticated extends AuthenticationState {}
-
-class AuthenticationUnauthenticated extends AuthenticationState {}

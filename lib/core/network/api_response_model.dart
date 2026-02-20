@@ -39,6 +39,7 @@ part 'api_response_model.g.dart';
 class ApiResponseModel<T> {
   /// Apakah request berhasil atau tidak.
   final bool? success;
+  final bool? error;
 
   /// Pesan dari server (misal: "Login berhasil", "Unauthorized").
   final String? message;
@@ -46,11 +47,19 @@ class ApiResponseModel<T> {
   /// Data utama dari response. Tipe-nya dinamis sesuai generic [T].
   /// Misalnya bisa berisi [UserModel], `[List<VenueModel>]`, dll.
   final T? data;
+  final T? result;
 
   /// Token autentikasi yang diberikan setelah login/register.
   final String? token;
 
-  const ApiResponseModel({this.success, this.message, this.data, this.token});
+  const ApiResponseModel({
+    this.success,
+    this.error,
+    this.message,
+    this.data,
+    this.result,
+    this.token,
+  });
 
   /// Factory untuk parsing JSON → `ApiResponseModel<T>`.
   ///
@@ -66,4 +75,7 @@ class ApiResponseModel<T> {
   /// [toJsonT] adalah fungsi yang tahu cara mengubah tipe [T] ke JSON.
   Map<String, dynamic> toJson(Object? Function(T value) toJsonT) =>
       _$ApiResponseModelToJson(this, toJsonT);
+
+  /// Getter untuk mengambil payload utama (data atau result)
+  T? get payload => data ?? result;
 }

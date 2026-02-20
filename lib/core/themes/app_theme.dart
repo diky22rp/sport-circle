@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class AppTheme {
-  static const Color primary = Color(0xFFFF385C); // Rausch
+  static const Color primary = Color.fromARGB(255, 255, 56, 92); // Rausch
   static const Color background = Color(0xFFFFFFFF);
   static const Color text = Color(0xFF222222);
   static const Color surface = Color(0xFFFFFFFF);

@@ -1,170 +1,265 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:sport_circle/core/di/injection.dart';
 import 'package:sport_circle/features/authentication/presentation/bloc/authentication/authentication_bloc.dart';
 import 'package:sport_circle/features/authentication/presentation/bloc/authentication/authentication_event.dart';
 import 'package:sport_circle/features/authentication/presentation/bloc/authentication/authentication_state.dart';
+import 'package:sport_circle/features/category/presentation/bloc/category_bloc.dart';
+import 'package:sport_circle/features/category/presentation/bloc/category_event.dart';
+import 'package:sport_circle/features/category/presentation/bloc/category_state.dart';
+import 'package:sport_circle/features/category/presentation/pages/category_horizontal_list.dart';
+import 'package:sport_circle/features/category/presentation/pages/category_horizontal_list_skeleton.dart';
+import 'dart:developer';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (_) =>
-          getIt<AuthenticationBloc>()..add(AuthenticationFetchUser()),
-      child: const _HomeView(),
-    );
-  }
+  State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeView extends StatelessWidget {
-  const _HomeView();
+class _HomeScreenState extends State<HomeScreen> {
+  String? selectedCategoryId;
+  final ScrollController _categoryScrollController = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+    context.read<CategoryBloc>().add(FetchCategories());
+    context.read<AuthenticationBloc>().add(
+      const AuthenticationEvent.fetchUser(),
+    );
+  }
+
+  @override
+  void dispose() {
+    _categoryScrollController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Home Dashboard'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.logout),
-            onPressed: () {
-              context.read<AuthenticationBloc>().add(AuthenticationLogout());
-            },
-          ),
-        ],
-      ),
-      body: BlocConsumer<AuthenticationBloc, AuthenticationState>(
-        listener: (context, state) {
-          if (state is AuthenticationLoggedOut) {
-            context.go('/login');
-          } else if (state is AuthenticationFailure) {
-            ScaffoldMessenger.of(
-              context,
-            ).showSnackBar(SnackBar(content: Text(state.message)));
-          }
-        },
+    return BlocListener<AuthenticationBloc, AuthenticationState>(
+      listener: (context, state) {
+        state.whenOrNull(
+          loggedOut: () => context.go('/login'),
+          unauthenticated: () => context.go('/login'),
+          failure: (message) => ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text(message))),
+        );
+      },
+      child: BlocBuilder<AuthenticationBloc, AuthenticationState>(
         builder: (context, state) {
-          if (state is AuthenticationLoading) {
-            return const Center(child: CircularProgressIndicator());
-          }
-
-          if (state is AuthenticationLoaded) {
-            final user = state.user;
-            return Padding(
-              padding: const EdgeInsets.all(24.0),
+          Widget body = state.maybeWhen(
+            loading: () => const Center(child: CircularProgressIndicator()),
+            loaded: (user) => SafeArea(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Profile card
-                  Card(
-                    elevation: 2,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16),
+                  // Search Bar
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 12,
                     ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(20.0),
-                      child: Column(
-                        children: [
-                          CircleAvatar(
-                            radius: 40,
-                            backgroundColor: Theme.of(
-                              context,
-                            ).colorScheme.primary,
-                            child: Text(
-                              user.name.isNotEmpty
-                                  ? user.name[0].toUpperCase()
-                                  : '?',
-                              style: const TextStyle(
-                                fontSize: 32,
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                              ),
+                    child: TextField(
+                      decoration: InputDecoration(
+                        hintText: 'Search by gocit or location',
+                        prefixIcon: Icon(Icons.search),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(24),
+                          borderSide: BorderSide.none,
+                        ),
+                        filled: true,
+                        fillColor: Colors.grey[200],
+                        contentPadding: const EdgeInsets.symmetric(vertical: 0),
+                      ),
+                    ),
+                  ),
+                  // Category Horizontal List
+                  BlocBuilder<CategoryBloc, CategoryState>(
+                    builder: (context, state) {
+                      log('CategoryBloc State: $state');
+                      if (state is CategoryLoading) {
+                        return const CategoryHorizontalListSkeleton();
+                      } else if (state is CategoryLoaded) {
+                        log(
+                          'Loaded categoriesnya:  ${state.categories.length}',
+                        );
+                        return CategoryHorizontalList(
+                          categories: state.categories,
+                          selectedCategoryId: selectedCategoryId,
+                          onCategorySelected: (id) {
+                            setState(() => selectedCategoryId = id);
+                            // TODO: open pop up screen for category filter activity
+                          },
+                        );
+                      }
+                      return const SizedBox(height: 80);
+                    },
+                  ),
+                  // Section Title
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(16, 18, 16, 8),
+                    child: Text(
+                      'Explore Nearby Activities',
+                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                  // Activities Horizontal Card List (dummy)
+                  SizedBox(
+                    height: 180,
+                    child: ListView.separated(
+                      scrollDirection: Axis.horizontal,
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      itemCount: 2, // Ganti dengan jumlah data aktivitas
+                      separatorBuilder: (_, __) => const SizedBox(width: 16),
+                      itemBuilder: (context, index) {
+                        return SizedBox(
+                          width: 220,
+                          child: Card(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(18),
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                ClipRRect(
+                                  borderRadius: const BorderRadius.vertical(
+                                    top: Radius.circular(18),
+                                  ),
+                                  child: Image.asset(
+                                    'assets/futsal.jpg', // Ganti dengan gambar aktivitas
+                                    height: 100,
+                                    width: double.infinity,
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.all(12),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        'Weekend Futsal Match',
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      SizedBox(height: 4),
+                                      Text(
+                                        'Sat, Poli @',
+                                        style: TextStyle(
+                                          fontSize: 12,
+                                          color: Colors.grey[600],
+                                        ),
+                                      ),
+                                      SizedBox(height: 4),
+                                      Row(
+                                        children: [
+                                          Text(
+                                            'IDR 50.000',
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 13,
+                                            ),
+                                          ),
+                                          const SizedBox(width: 8),
+                                          Container(
+                                            padding: const EdgeInsets.symmetric(
+                                              horizontal: 8,
+                                              vertical: 2,
+                                            ),
+                                            decoration: BoxDecoration(
+                                              color: Colors.green[100],
+                                              borderRadius:
+                                                  BorderRadius.circular(8),
+                                            ),
+                                            child: const Text(
+                                              'Added',
+                                              style: TextStyle(
+                                                color: Colors.green,
+                                                fontSize: 11,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
-                          const SizedBox(height: 16),
-                          Text(
-                            user.name,
-                            style: Theme.of(context).textTheme.headlineLarge,
-                          ),
-                          const SizedBox(height: 4),
-                          Text(
-                            user.email,
-                            style: Theme.of(context).textTheme.bodyMedium
-                                ?.copyWith(color: Colors.grey),
-                          ),
-                          const SizedBox(height: 16),
-                          const Divider(),
-                          const SizedBox(height: 12),
-                          _InfoRow(label: 'ID', value: user.id),
-                          const SizedBox(height: 8),
-                          _InfoRow(label: 'Role', value: user.role ?? '-'),
-                          const SizedBox(height: 8),
-                          _InfoRow(
-                            label: 'Phone',
-                            value: user.phoneNumber ?? '-',
-                          ),
-                        ],
-                      ),
+                        );
+                      },
                     ),
                   ),
                 ],
               ),
-            );
-          }
-
-          if (state is AuthenticationFailure) {
-            return Center(
+            ),
+            failure: (message) => Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   const Icon(Icons.error_outline, size: 48, color: Colors.red),
                   const SizedBox(height: 16),
-                  Text(state.message, textAlign: TextAlign.center),
+                  Text(message, textAlign: TextAlign.center),
                   const SizedBox(height: 16),
                   ElevatedButton(
                     onPressed: () => context.read<AuthenticationBloc>().add(
-                      AuthenticationFetchUser(),
+                      const AuthenticationEvent.fetchUser(),
                     ),
                     child: const Text('Coba Lagi'),
                   ),
                 ],
               ),
-            );
-          }
-
-          return const SizedBox.shrink();
+            ),
+            orElse: () => const SizedBox.shrink(),
+          );
+          return Scaffold(
+            appBar: AppBar(
+              elevation: 0,
+              backgroundColor: Colors.transparent,
+              toolbarHeight: 0,
+              actions: [
+                IconButton(
+                  icon: const Icon(Icons.logout),
+                  onPressed: () {
+                    context.read<AuthenticationBloc>().add(
+                      const AuthenticationEvent.logout(),
+                    );
+                  },
+                ),
+              ],
+            ),
+            body: body,
+            floatingActionButton: FloatingActionButton(
+              onPressed: () {
+                // TODO: Tambah aktivitas baru
+              },
+              child: const Icon(Icons.add),
+            ),
+            floatingActionButtonLocation:
+                FloatingActionButtonLocation.centerDocked,
+            bottomNavigationBar: BottomNavigationBar(
+              currentIndex: 0,
+              items: const [
+                BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.favorite),
+                  label: 'Saved',
+                ),
+                BottomNavigationBarItem(icon: Icon(Icons.menu), label: 'Menu'),
+              ],
+            ),
+          );
         },
       ),
-    );
-  }
-}
-
-class _InfoRow extends StatelessWidget {
-  final String label;
-  final String value;
-
-  const _InfoRow({required this.label, required this.value});
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        SizedBox(
-          width: 70,
-          child: Text(
-            label,
-            style: Theme.of(
-              context,
-            ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w600),
-          ),
-        ),
-        Expanded(
-          child: Text(value, style: Theme.of(context).textTheme.bodyMedium),
-        ),
-      ],
     );
   }
 }

@@ -1,33 +1,15 @@
-import 'package:equatable/equatable.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-abstract class RegisterEvent extends Equatable {
-  const RegisterEvent();
-  @override
-  List<Object?> get props => [];
-}
+part 'register_event.freezed.dart';
 
-class RegisterSubmitted extends RegisterEvent {
-  final String name;
-  final String email;
-  final String password;
-  final String cPassword;
-  final String role;
-  final String phoneNumber;
-  const RegisterSubmitted({
-    required this.name,
-    required this.email,
-    required this.password,
-    required this.cPassword,
-    this.role = 'user',
-    this.phoneNumber = '',
-  });
-  @override
-  List<Object?> get props => [
-    name,
-    email,
-    password,
-    cPassword,
-    role,
-    phoneNumber,
-  ];
+@freezed
+sealed class RegisterEvent with _$RegisterEvent {
+  const factory RegisterEvent.submitted({
+    required String name,
+    required String email,
+    required String password,
+    required String cPassword,
+    @Default('user') String role,
+    @Default('') String phoneNumber,
+  }) = _Submitted;
 }
