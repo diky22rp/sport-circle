@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sport_circle/features/category/data/models/category_model.dart';
+import 'package:sport_circle/core/utils/string_utils.dart';
 
 class CategoryHorizontalList extends StatelessWidget {
   final List<CategoryModel> categories;
@@ -42,7 +43,7 @@ class CategoryHorizontalList extends StatelessWidget {
                   ),
                   const SizedBox(height: 6),
                   Text(
-                    cat.name,
+                    StringUtils.capitalizeFirstLetter(cat.name),
                     style: TextStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.w500,

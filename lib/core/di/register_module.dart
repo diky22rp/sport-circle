@@ -3,6 +3,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:injectable/injectable.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sport_circle/core/constants/api_constants.dart';
+import 'package:sport_circle/features/activity/data/datasources/activity_api_client.dart';
 import 'package:sport_circle/features/authentication/data/datasources/auth_api_client.dart';
 import 'package:sport_circle/features/category/data/datasources/category_api_client.dart';
 
@@ -49,4 +50,7 @@ abstract class RegisterModule {
 
   @lazySingleton
   CategoryApiClient categoryApiClient(Dio dio) => CategoryApiClient(dio);
+
+  @lazySingleton
+  ActivityApiClient activityApiClient(Dio dio) => ActivityApiClient(dio);
 }

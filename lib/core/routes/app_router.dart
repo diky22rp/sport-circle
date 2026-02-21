@@ -1,5 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
+import 'package:sport_circle/features/activity/presentation/pages/activity_page.dart';
 import 'package:sport_circle/features/authentication/presentation/pages/login_page.dart';
 import 'package:sport_circle/features/authentication/presentation/pages/register_page.dart';
 import 'package:sport_circle/features/home/presentation/home_screen.dart';
@@ -49,7 +50,7 @@ final GoRouter appRouter = GoRouter(
             GoRoute(
               path: '/saved',
               name: 'saved',
-              builder: (context, state) => const ProfileScreen(),
+              builder: (context, state) => const ActivityPage(),
             ),
           ],
         ),

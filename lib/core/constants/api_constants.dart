@@ -15,4 +15,10 @@ class ApiConstants {
   static const String createSportCategory = '/api/v1/sport-categories/create';
   static const String updateSportCategory = '/api/v1/sport-categories/update';
   static const String deleteSportCategory = '/api/v1/sport-categories/delete';
+
+  // Sport Activities
+  static const String activities = '/api/v1/sport-activities';
+  static const String createActivity = '/api/v1/sport-activities/create';
+  static const String updateActivity = '/api/v1/sport-activities/update';
+  static const String deleteActivity = '/api/v1/sport-activities/delete';
 }

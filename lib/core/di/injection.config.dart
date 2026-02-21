@@ -15,6 +15,22 @@ import 'package:get_it/get_it.dart' as _i174;
 import 'package:injectable/injectable.dart' as _i526;
 import 'package:shared_preferences/shared_preferences.dart' as _i460;
 import 'package:sport_circle/core/di/register_module.dart' as _i224;
+import 'package:sport_circle/features/activity/data/datasources/activity_api_client.dart'
+    as _i291;
+import 'package:sport_circle/features/activity/data/datasources/remote/activity_remote_data_source.dart'
+    as _i715;
+import 'package:sport_circle/features/activity/data/datasources/remote/activity_remote_data_source_impl.dart'
+    as _i246;
+import 'package:sport_circle/features/activity/data/repositories/activity_repository_impl.dart'
+    as _i149;
+import 'package:sport_circle/features/activity/domain/repositories/activity_repository.dart'
+    as _i260;
+import 'package:sport_circle/features/activity/domain/usecases/create_activity_usecase.dart'
+    as _i990;
+import 'package:sport_circle/features/activity/domain/usecases/get_activities_usecase.dart'
+    as _i122;
+import 'package:sport_circle/features/activity/presentation/bloc/activity_bloc.dart'
+    as _i1055;
 import 'package:sport_circle/features/authentication/data/datasources/auth_api_client.dart'
     as _i734;
 import 'package:sport_circle/features/authentication/data/datasources/local/auth_local_data_source.dart'
@@ -83,8 +99,26 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i636.CategoryApiClient>(
       () => registerModule.categoryApiClient(gh<_i361.Dio>()),
     );
+    gh.lazySingleton<_i291.ActivityApiClient>(
+      () => registerModule.activityApiClient(gh<_i361.Dio>()),
+    );
+    gh.lazySingleton<_i715.ActivityRemoteDataSource>(
+      () => _i246.ActivityRemoteDataSourceImpl(gh<_i291.ActivityApiClient>()),
+    );
     gh.lazySingleton<_i867.AuthRemoteDataSource>(
       () => _i599.AuthRemoteDataSourceImpl(gh<_i734.AuthApiClient>()),
+    );
+    gh.lazySingleton<_i260.ActivityRepository>(
+      () => _i149.ActivityRepositoryImpl(
+        gh<_i715.ActivityRemoteDataSource>(),
+        gh<_i531.AuthLocalDataSource>(),
+      ),
+    );
+    gh.lazySingleton<_i990.CreateActivityUseCase>(
+      () => _i990.CreateActivityUseCase(gh<_i260.ActivityRepository>()),
+    );
+    gh.lazySingleton<_i122.GetActivitiesUsecase>(
+      () => _i122.GetActivitiesUsecase(gh<_i260.ActivityRepository>()),
     );
     gh.lazySingleton<_i127.CategoryRemoteDataSource>(
       () => _i129.CategoryRemoteDataSourceImpl(
@@ -112,6 +146,9 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.lazySingleton<_i187.UpdateProfileUseCase>(
       () => _i187.UpdateProfileUseCase(gh<_i896.AuthRepository>()),
+    );
+    gh.factory<_i1055.ActivityBloc>(
+      () => _i1055.ActivityBloc(gh<_i122.GetActivitiesUsecase>()),
     );
     gh.lazySingleton<_i875.CategoryRepository>(
       () => _i91.CategoryRepositoryImpl(gh<_i127.CategoryRemoteDataSource>()),
