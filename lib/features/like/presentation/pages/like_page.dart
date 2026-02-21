@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:sport_circle/features/activity/domain/entities/activity_entity.dart';
 import 'package:sport_circle/features/like/presentation/cubit/like_cubit.dart';
 import 'package:sport_circle/features/activity/presentation/pages/widgets/activity_list.dart';
@@ -84,6 +85,12 @@ class _LikePageState extends State<LikePage> {
                         hasReachedMax: true,
                         scrollController: ScrollController(),
                         physics: const AlwaysScrollableScrollPhysics(),
+                        onTap: (activity) {
+                          context.push(
+                            '/activity/${activity.id}',
+                            extra: activity,
+                          );
+                        },
                       );
                     },
                   ),

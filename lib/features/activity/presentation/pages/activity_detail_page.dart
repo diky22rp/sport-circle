@@ -5,8 +5,10 @@ import 'package:sport_circle/core/utils/date_utils.dart' as date_utils;
 import 'package:sport_circle/features/activity/domain/entities/activity_entity.dart';
 import 'package:sport_circle/features/like/presentation/cubit/like_cubit.dart';
 import 'package:sport_circle/features/transaction/presentation/bloc/transaction_bloc.dart';
+import 'package:sport_circle/features/activity/presentation/pages/widgets/detail/info_card.dart';
+import 'package:sport_circle/features/activity/presentation/pages/widgets/detail/payment_method_dialog.dart';
+import 'package:sport_circle/features/activity/presentation/pages/widgets/detail/participants_list.dart';
 
-// Convert ActivityDetailPage to StatefulWidget
 class ActivityDetailPage extends StatefulWidget {
   final ActivityEntity activity;
   const ActivityDetailPage({super.key, required this.activity});
@@ -179,7 +181,7 @@ class _ActivityDetailPageState extends State<ActivityDetailPage> {
                         const SizedBox(height: 20),
                         Row(
                           children: [
-                            _InfoCard(
+                            InfoCard(
                               icon: Icons.calendar_today,
                               label: 'DATE',
                               value: date_utils.DateUtils.formatTanggalIndo(
@@ -187,7 +189,7 @@ class _ActivityDetailPageState extends State<ActivityDetailPage> {
                               ),
                             ),
                             const SizedBox(width: 10),
-                            _InfoCard(
+                            InfoCard(
                               icon: Icons.access_time,
                               label: 'TIME',
                               value:
@@ -236,22 +238,8 @@ class _ActivityDetailPageState extends State<ActivityDetailPage> {
                             style: TextStyle(color: Colors.grey),
                           ),
                         if (widget.activity.participants.isNotEmpty)
-                          Column(
-                            children: widget.activity.participants
-                                .map(
-                                  (p) => ListTile(
-                                    leading: CircleAvatar(
-                                      child: Text(
-                                        p.user.name.isNotEmpty
-                                            ? p.user.name[0]
-                                            : '?',
-                                      ),
-                                    ),
-                                    title: Text(p.user.name),
-                                    subtitle: Text(p.user.email),
-                                  ),
-                                )
-                                .toList(),
+                          ParticipantsList(
+                            participants: widget.activity.participants,
                           ),
                         const SizedBox(height: 20),
                         Row(
@@ -309,64 +297,6 @@ class _ActivityDetailPageState extends State<ActivityDetailPage> {
     );
   }
 
-  Future<int?> _selectPaymentMethod(BuildContext context) async {
-    final paymentMethods = [
-      {
-        "id": 1,
-        "name": "BCA",
-        "image_url":
-            "https://dibimbing-cdn.sgp1.cdn.digitaloceanspaces.com/bca-logo.svg",
-      },
-      {
-        "id": 2,
-        "name": "Bank BRI",
-        "image_url":
-            "https://dibimbing-cdn.sgp1.cdn.digitaloceanspaces.com/bri-logo.svg",
-      },
-      {
-        "id": 3,
-        "name": "Bank Mandiri",
-        "image_url":
-            "https://dibimbing-cdn.sgp1.cdn.digitaloceanspaces.com/mandiri-logo.svg",
-      },
-      {
-        "id": 4,
-        "name": "Bank BNI",
-        "image_url":
-            "https://dibimbing-cdn.sgp1.cdn.digitaloceanspaces.com/bni-logo.svg",
-      },
-    ];
-
-    return await showDialog<int>(
-      context: context,
-      builder: (ctx) => SimpleDialog(
-        title: const Text('Pilih Payment Method'),
-        children: paymentMethods.map((pm) {
-          return SimpleDialogOption(
-            onPressed: () => Navigator.of(ctx).pop(pm["id"] as int),
-            child: Row(
-              children: [
-                // Add errorBuilder for fallback icon
-                Image.network(
-                  pm["image_url"] as String,
-                  width: 32,
-                  height: 32,
-                  errorBuilder: (context, error, stackTrace) => const Icon(
-                    Icons.account_balance,
-                    size: 32,
-                    color: Colors.grey,
-                  ),
-                ),
-                const SizedBox(width: 12),
-                Text(pm["name"] as String),
-              ],
-            ),
-          );
-        }).toList(),
-      ),
-    );
-  }
-
   void _onJoinActivity() async {
     final confirm = await showDialog<bool>(
       context: context,
@@ -400,43 +330,38 @@ class _ActivityDetailPageState extends State<ActivityDetailPage> {
       }
     }
   }
-}
 
-class _InfoCard extends StatelessWidget {
-  final IconData icon;
-  final String label;
-  final String value;
-  const _InfoCard({
-    required this.icon,
-    required this.label,
-    required this.value,
-  });
+  Future<int?> _selectPaymentMethod(BuildContext context) async {
+    final paymentMethods = [
+      {
+        "id": 1,
+        "name": "BCA",
+        "image_url":
+            "https://dibimbing-cdn.sgp1.cdn.digitaloceanspaces.com/bca-logo.svg",
+      },
+      {
+        "id": 2,
+        "name": "Bank BRI",
+        "image_url":
+            "https://dibimbing-cdn.sgp1.cdn.digitaloceanspaces.com/bri-logo.svg",
+      },
+      {
+        "id": 3,
+        "name": "Bank Mandiri",
+        "image_url":
+            "https://dibimbing-cdn.sgp1.cdn.digitaloceanspaces.com/mandiri-logo.svg",
+      },
+      {
+        "id": 4,
+        "name": "Bank BNI",
+        "image_url":
+            "https://dibimbing-cdn.sgp1.cdn.digitaloceanspaces.com/bni-logo.svg",
+      },
+    ];
 
-  @override
-  Widget build(BuildContext context) {
-    return Expanded(
-      child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 8),
-        decoration: BoxDecoration(
-          color: Colors.grey[100],
-          borderRadius: BorderRadius.circular(12),
-        ),
-        child: Column(
-          children: [
-            Icon(icon, size: 18, color: Colors.pink),
-            const SizedBox(height: 4),
-            Text(
-              label,
-              style: const TextStyle(fontSize: 10, color: Colors.grey),
-            ),
-            const SizedBox(height: 2),
-            Text(
-              value,
-              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
-            ),
-          ],
-        ),
-      ),
+    return await showDialog<int>(
+      context: context,
+      builder: (ctx) => PaymentMethodDialog(paymentMethods: paymentMethods),
     );
   }
 }
