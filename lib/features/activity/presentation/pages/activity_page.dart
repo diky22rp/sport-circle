@@ -14,18 +14,9 @@ import 'package:sport_circle/features/activity/presentation/pages/widgets/locati
 import 'package:sport_circle/features/activity/presentation/pages/widgets/location_picker_bottom_sheet.dart';
 import 'package:sport_circle/features/activity/presentation/pages/widgets/activity_list.dart';
 import 'package:go_router/go_router.dart';
-
-// Hardcode data (gunakan model dari location_picker_bottom_sheet.dart)
-final List<Province> provinces = [
-  Province(31, 'DKI Jakarta'),
-  Province(11, 'Aceh'),
-];
-
-final List<City> cities = [
-  City(3172, 'Jakarta Timur', 31),
-  City(1101, 'Simeulue', 11),
-  City(1113, 'Gayo Lues', 11),
-];
+import 'package:sport_circle/features/location/presentation/cubit/location_cubit.dart';
+import 'package:sport_circle/features/location/domain/entities/province_entity.dart';
+import 'package:sport_circle/features/location/domain/entities/city_entity.dart';
 
 class ActivityPage extends StatefulWidget {
   const ActivityPage({super.key});
@@ -46,9 +37,9 @@ class _ActivityPageState extends State<ActivityPage> {
 
   Timer? _debounce;
 
-  Province? _selectedProvince;
-  City? _selectedCity;
-  bool _isFetching = false; // Tambahkan flag ini
+  ProvinceEntity? _selectedProvince;
+  CityEntity? _selectedCity;
+  bool _isFetching = false;
 
   @override
   void initState() {
@@ -66,12 +57,14 @@ class _ActivityPageState extends State<ActivityPage> {
     );
     _searchController.addListener(_onSearchChanged);
     _scrollController.addListener(_onScroll);
-
     _searchFocusNode.addListener(() {
       setState(() {
         _isSearchFocused = _searchFocusNode.hasFocus;
       });
     });
+    // Fetch provinces and cities from LocationCubit
+    context.read<LocationCubit>().fetchProvinces();
+    context.read<LocationCubit>().fetchCities();
   }
 
   void _onSearchChanged() {
@@ -131,27 +124,38 @@ class _ActivityPageState extends State<ActivityPage> {
         borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
       ),
       builder: (context) {
-        return LocationPickerBottomSheet(
-          provinces: provinces,
-          cities: cities,
-          selectedProvince: _selectedProvince,
-          selectedCity: _selectedCity,
-          onApply: (prov, city) {
-            setState(() {
-              _selectedProvince = prov;
-              _selectedCity = city;
-              context.read<ActivityBloc>().add(
-                ActivityEvent.fetchActivities(
-                  page: 1,
-                  perPage: _perPage,
-                  cityId: city?.id,
-                  sportCategoryId: _selectedCategoryId == null
-                      ? null
-                      : int.tryParse(_selectedCategoryId!),
-                  search: _search,
-                ),
-              );
-            });
+        return BlocBuilder<LocationCubit, LocationState>(
+          builder: (context, locationState) {
+            return LocationPickerBottomSheet(
+              provinces: locationState.provinces,
+              cities: locationState.cities,
+              selectedProvince: _selectedProvince,
+              selectedCity: _selectedCity,
+              onApply: (prov, city) {
+                setState(() {
+                  _selectedProvince = prov;
+                  _selectedCity = city;
+                  context.read<ActivityBloc>().add(
+                    ActivityEvent.fetchActivities(
+                      page: 1,
+                      perPage: _perPage,
+                      cityId: city?.cityId,
+                      sportCategoryId: _selectedCategoryId == null
+                          ? null
+                          : int.tryParse(_selectedCategoryId!),
+                      search: _search,
+                    ),
+                  );
+                });
+              },
+              onProvinceChanged: (prov) {
+                if (prov != null) {
+                  context.read<LocationCubit>().fetchCitiesByProvince(
+                    prov.provinceId,
+                  );
+                }
+              },
+            );
           },
         );
       },
@@ -170,7 +174,7 @@ class _ActivityPageState extends State<ActivityPage> {
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               child: LocationFilterButton(
                 cityLabel: _selectedCity != null
-                    ? '${_selectedCity!.name}, ${_selectedProvince?.name ?? ''}'
+                    ? '${_selectedCity!.cityName}, ${_selectedProvince?.provinceName ?? ''}'
                     : null,
                 onPressed: _showLocationPicker,
                 onClear: (_selectedCity != null || _selectedProvince != null)
@@ -264,7 +268,7 @@ class _ActivityPageState extends State<ActivityPage> {
                                         ? null
                                         : int.tryParse(_selectedCategoryId!),
                                     search: _search,
-                                    cityId: _selectedCity?.id,
+                                    cityId: _selectedCity?.cityId,
                                   ),
                                 );
                                 // Optionally wait for loading to finish

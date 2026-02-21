@@ -1,24 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:sport_circle/features/location/domain/entities/province_entity.dart';
+import 'package:sport_circle/features/location/domain/entities/city_entity.dart';
 
-class Province {
-  final int id;
-  final String name;
-  Province(this.id, this.name);
-}
-
-class City {
-  final int id;
-  final String name;
-  final int provinceId;
-  City(this.id, this.name, this.provinceId);
-}
-
+/// Picker for province and city selection. Data and state managed by parent.
 class LocationPickerBottomSheet extends StatefulWidget {
-  final List<Province> provinces;
-  final List<City> cities;
-  final Province? selectedProvince;
-  final City? selectedCity;
-  final Function(Province?, City?) onApply;
+  /// List of provinces to show
+  final List<ProvinceEntity> provinces;
+
+  /// List of cities to show
+  final List<CityEntity> cities;
+
+  /// Currently selected province
+  final ProvinceEntity? selectedProvince;
+
+  /// Currently selected city
+  final CityEntity? selectedCity;
+
+  /// Callback for apply action
+  final void Function(ProvinceEntity?, CityEntity?) onApply;
+
+  /// Callback for province change
+  final void Function(ProvinceEntity?)? onProvinceChanged;
 
   const LocationPickerBottomSheet({
     super.key,
@@ -27,6 +29,7 @@ class LocationPickerBottomSheet extends StatefulWidget {
     this.selectedProvince,
     this.selectedCity,
     required this.onApply,
+    this.onProvinceChanged,
   });
 
   @override
@@ -35,8 +38,8 @@ class LocationPickerBottomSheet extends StatefulWidget {
 }
 
 class _LocationPickerBottomSheetState extends State<LocationPickerBottomSheet> {
-  Province? tempProvince;
-  City? tempCity;
+  ProvinceEntity? tempProvince;
+  CityEntity? tempCity;
   String provinceSearch = '';
   String citySearch = '';
 
@@ -45,21 +48,87 @@ class _LocationPickerBottomSheetState extends State<LocationPickerBottomSheet> {
     super.initState();
     tempProvince = widget.selectedProvince;
     tempCity = widget.selectedCity;
+    provinceSearch = '';
+    citySearch = '';
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _provinceScrollToSelected();
+      _cityScrollToSelected();
+    });
+  }
+
+  @override
+  void didUpdateWidget(LocationPickerBottomSheet oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.selectedProvince != oldWidget.selectedProvince ||
+        widget.selectedCity != oldWidget.selectedCity) {
+      tempProvince = widget.selectedProvince;
+      tempCity = widget.selectedCity;
+      provinceSearch = '';
+      citySearch = '';
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _provinceScrollToSelected();
+        _cityScrollToSelected();
+      });
+    }
+  }
+
+  final _provinceScrollController = ScrollController();
+  final _cityScrollController = ScrollController();
+
+  void _provinceScrollToSelected() {
+    final filteredProvinces = widget.provinces
+        .where(
+          (prov) => prov.provinceName.toLowerCase().contains(
+            provinceSearch.toLowerCase(),
+          ),
+        )
+        .toList();
+    final idx = filteredProvinces.indexWhere(
+      (prov) => prov.provinceId == tempProvince?.provinceId,
+    );
+    if (idx != -1 && _provinceScrollController.hasClients) {
+      _provinceScrollController.animateTo(
+        idx * 120.0, // approx item width
+        duration: Duration(milliseconds: 350),
+        curve: Curves.easeInOut,
+      );
+    }
+  }
+
+  void _cityScrollToSelected() {
+    final filteredCities = widget.cities
+        .where(
+          (city) =>
+              city.provinceId == (tempProvince?.provinceId ?? -1) &&
+              city.cityName.toLowerCase().contains(citySearch.toLowerCase()),
+        )
+        .toList();
+    final idx = filteredCities.indexWhere(
+      (city) => city.cityId == tempCity?.cityId,
+    );
+    if (idx != -1 && _cityScrollController.hasClients) {
+      _cityScrollController.animateTo(
+        idx * 56.0, // approx item height
+        duration: Duration(milliseconds: 350),
+        curve: Curves.easeInOut,
+      );
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     final filteredProvinces = widget.provinces
         .where(
-          (prov) =>
-              prov.name.toLowerCase().contains(provinceSearch.toLowerCase()),
+          (prov) => prov.provinceName.toLowerCase().contains(
+            provinceSearch.toLowerCase(),
+          ),
         )
         .toList();
     final filteredCities = widget.cities
         .where(
           (city) =>
-              city.provinceId == (tempProvince?.id ?? -1) &&
-              city.name.toLowerCase().contains(citySearch.toLowerCase()),
+              city.provinceId == (tempProvince?.provinceId ?? -1) &&
+              city.cityName.toLowerCase().contains(citySearch.toLowerCase()),
         )
         .toList();
 
@@ -78,7 +147,14 @@ class _LocationPickerBottomSheetState extends State<LocationPickerBottomSheet> {
             style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
           ),
           SizedBox(height: 16),
-          // Search province
+          if (widget.provinces.isEmpty)
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                'Tidak ada data provinsi',
+                style: TextStyle(color: Colors.grey),
+              ),
+            ),
           TextField(
             decoration: InputDecoration(
               hintText: 'Cari provinsi',
@@ -95,21 +171,25 @@ class _LocationPickerBottomSheetState extends State<LocationPickerBottomSheet> {
             },
           ),
           SizedBox(height: 8),
-          // List province
           SizedBox(
             height: 60,
             child: ListView.builder(
+              controller: _provinceScrollController,
               scrollDirection: Axis.horizontal,
               itemCount: filteredProvinces.length,
               itemBuilder: (context, index) {
                 final prov = filteredProvinces[index];
-                final selected = prov.id == (tempProvince?.id ?? -1);
+                final selected =
+                    prov.provinceId == (tempProvince?.provinceId ?? -1);
                 return GestureDetector(
                   onTap: () {
                     setState(() {
                       tempProvince = prov;
                       tempCity = null;
                     });
+                    if (widget.onProvinceChanged != null) {
+                      widget.onProvinceChanged!(prov);
+                    }
                   },
                   child: Container(
                     margin: EdgeInsets.symmetric(horizontal: 8),
@@ -123,7 +203,7 @@ class _LocationPickerBottomSheetState extends State<LocationPickerBottomSheet> {
                       ),
                     ),
                     child: Text(
-                      prov.name,
+                      prov.provinceName,
                       style: TextStyle(
                         color: selected ? Colors.blue : Colors.black,
                         fontWeight: selected
@@ -137,7 +217,14 @@ class _LocationPickerBottomSheetState extends State<LocationPickerBottomSheet> {
             ),
           ),
           SizedBox(height: 16),
-          // Search city
+          if (widget.cities.isEmpty)
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                'Tidak ada data kota',
+                style: TextStyle(color: Colors.grey),
+              ),
+            ),
           TextField(
             decoration: InputDecoration(
               hintText: 'Cari kota',
@@ -154,17 +241,18 @@ class _LocationPickerBottomSheetState extends State<LocationPickerBottomSheet> {
             },
           ),
           SizedBox(height: 8),
-          // List city
           SizedBox(
             height: 180,
             child: ListView.builder(
+              controller: _cityScrollController,
               itemCount: filteredCities.length,
               itemBuilder: (context, index) {
                 final city = filteredCities[index];
                 final selected =
-                    city.id == (tempCity?.id ?? widget.selectedCity?.id);
+                    city.cityId ==
+                    (tempCity?.cityId ?? widget.selectedCity?.cityId);
                 return ListTile(
-                  title: Text(city.name),
+                  title: Text(city.cityName),
                   leading: Icon(
                     Icons.location_on,
                     color: selected ? Colors.blue : Colors.grey,

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:sport_circle/features/activity/presentation/bloc/activity_bloc.dart';
 import 'package:sport_circle/features/category/presentation/bloc/category_bloc.dart';
 import 'package:sport_circle/features/like/presentation/cubit/like_cubit.dart';
+import 'package:sport_circle/features/location/presentation/cubit/location_cubit.dart';
 import 'core/di/injection.dart';
 import 'core/presentation/bloc_observer.dart';
 import 'core/themes/app_theme.dart';
@@ -22,6 +23,13 @@ void main() async {
         BlocProvider(create: (context) => getIt<CategoryBloc>()),
         BlocProvider(create: (context) => getIt<ActivityBloc>()),
         BlocProvider(create: (context) => getIt<LikeCubit>()..loadLikes()),
+        BlocProvider(
+          create: (context) => getIt<LocationCubit>()..fetchProvinces(),
+        ),
+        BlocProvider(
+          create: (context) => getIt<LocationCubit>()..fetchCities(),
+        ),
+        BlocProvider(create: (context) => getIt<LocationCubit>()),
       ],
       child: const SportCircleApp(),
     ),

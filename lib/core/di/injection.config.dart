@@ -77,6 +77,22 @@ import 'package:sport_circle/features/like/data/datasources/local/like_local_dat
     as _i449;
 import 'package:sport_circle/features/like/presentation/cubit/like_cubit.dart'
     as _i595;
+import 'package:sport_circle/features/location/data/datasources/location_api_client.dart'
+    as _i944;
+import 'package:sport_circle/features/location/data/datasources/remote/location_remote_data_source_impl.dart'
+    as _i37;
+import 'package:sport_circle/features/location/data/datasources/remote/location_remote_datasource.dart'
+    as _i140;
+import 'package:sport_circle/features/location/data/repositories/location_repository_impl.dart'
+    as _i543;
+import 'package:sport_circle/features/location/domain/repositories/location_repository.dart'
+    as _i11;
+import 'package:sport_circle/features/location/domain/usecases/get_cities.dart'
+    as _i249;
+import 'package:sport_circle/features/location/domain/usecases/get_provinces.dart'
+    as _i564;
+import 'package:sport_circle/features/location/presentation/cubit/location_cubit.dart'
+    as _i294;
 
 extension GetItInjectableX on _i174.GetIt {
   // initializes the registration of main-scope dependencies inside of GetIt
@@ -109,6 +125,9 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i291.ActivityApiClient>(
       () => registerModule.activityApiClient(gh<_i361.Dio>()),
     );
+    gh.lazySingleton<_i944.LocationApiClient>(
+      () => registerModule.locationApiClient(gh<_i361.Dio>()),
+    );
     gh.lazySingleton<_i715.ActivityRemoteDataSource>(
       () => _i246.ActivityRemoteDataSourceImpl(gh<_i291.ActivityApiClient>()),
     );
@@ -136,11 +155,29 @@ extension GetItInjectableX on _i174.GetIt {
         gh<_i531.AuthLocalDataSource>(),
       ),
     );
+    gh.lazySingleton<_i140.LocationRemoteDataSource>(
+      () => _i37.LocationRemoteDataSourceImpl(
+        gh<_i944.LocationApiClient>(),
+        gh<_i531.AuthLocalDataSource>(),
+      ),
+    );
     gh.lazySingleton<_i896.AuthRepository>(
       () => _i152.AuthRepositoryImpl(
         gh<_i867.AuthRemoteDataSource>(),
         gh<_i531.AuthLocalDataSource>(),
       ),
+    );
+    gh.lazySingleton<_i11.LocationRepository>(
+      () => _i543.LocationRepositoryImpl(gh<_i140.LocationRemoteDataSource>()),
+    );
+    gh.lazySingleton<_i249.GetCities>(
+      () => _i249.GetCities(gh<_i11.LocationRepository>()),
+    );
+    gh.lazySingleton<_i249.GetCitiesByProvince>(
+      () => _i249.GetCitiesByProvince(gh<_i11.LocationRepository>()),
+    );
+    gh.lazySingleton<_i564.GetProvinces>(
+      () => _i564.GetProvinces(gh<_i11.LocationRepository>()),
     );
     gh.lazySingleton<_i110.CheckTokenUseCase>(
       () => _i110.CheckTokenUseCase(gh<_i896.AuthRepository>()),
@@ -168,6 +205,13 @@ extension GetItInjectableX on _i174.GetIt {
         gh<_i209.GetMeUseCase>(),
         gh<_i110.CheckTokenUseCase>(),
         gh<_i187.UpdateProfileUseCase>(),
+      ),
+    );
+    gh.factory<_i294.LocationCubit>(
+      () => _i294.LocationCubit(
+        getProvinces: gh<_i564.GetProvinces>(),
+        getCities: gh<_i249.GetCities>(),
+        getCitiesByProvince: gh<_i249.GetCitiesByProvince>(),
       ),
     );
     gh.factory<_i112.LoginBloc>(() => _i112.LoginBloc(gh<_i36.LoginUseCase>()));
