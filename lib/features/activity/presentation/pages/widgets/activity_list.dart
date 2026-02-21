@@ -1,17 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sport_circle/core/presentation/widgets/sport_circle_loading.dart';
+import 'package:sport_circle/core/themes/app_theme.dart';
 import 'package:sport_circle/features/activity/domain/entities/activity_entity.dart';
+import 'package:sport_circle/features/like/presentation/cubit/like_cubit.dart';
 
 class ActivityList extends StatelessWidget {
   final List<ActivityEntity> activities;
   final bool hasReachedMax;
   final ScrollController scrollController;
+  final ScrollPhysics? physics;
 
   const ActivityList({
     super.key,
     required this.activities,
     required this.hasReachedMax,
     required this.scrollController,
+    this.physics,
   });
 
   @override
@@ -21,6 +26,7 @@ class ActivityList extends StatelessWidget {
     }
     return ListView.builder(
       controller: scrollController,
+      physics: physics,
       itemCount: hasReachedMax ? activities.length : activities.length + 1,
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       itemBuilder: (context, index) {
@@ -66,7 +72,28 @@ class ActivityList extends StatelessWidget {
                             ),
                           ),
                           const Spacer(),
-                          const Icon(Icons.favorite_border, color: Colors.grey),
+                          BlocBuilder<LikeCubit, Map<int, bool>>(
+                            builder: (context, likes) {
+                              final isLiked = likes[activity.id] ?? false;
+                              return InkWell(
+                                onTap: () => context
+                                    .read<LikeCubit>()
+                                    .toggleLike(activity),
+                                borderRadius: BorderRadius.circular(24),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Icon(
+                                    isLiked
+                                        ? Icons.favorite
+                                        : Icons.favorite_border,
+                                    color: isLiked
+                                        ? AppTheme.primary
+                                        : Colors.grey,
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
                         ],
                       ),
                       const SizedBox(height: 8),

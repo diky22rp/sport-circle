@@ -73,6 +73,10 @@ import 'package:sport_circle/features/category/domain/usecases/get_sport_categor
     as _i233;
 import 'package:sport_circle/features/category/presentation/bloc/category_bloc.dart'
     as _i296;
+import 'package:sport_circle/features/like/data/datasources/local/like_local_data_source.dart'
+    as _i449;
+import 'package:sport_circle/features/like/presentation/cubit/like_cubit.dart'
+    as _i595;
 
 extension GetItInjectableX on _i174.GetIt {
   // initializes the registration of main-scope dependencies inside of GetIt
@@ -93,6 +97,9 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i531.AuthLocalDataSource>(
       () => _i531.AuthLocalDataSourceImpl(gh<_i558.FlutterSecureStorage>()),
     );
+    gh.lazySingleton<_i449.LikeLocalDataSource>(
+      () => _i449.LikeLocalDataSourceImpl(),
+    );
     gh.lazySingleton<_i734.AuthApiClient>(
       () => registerModule.authApiClient(gh<_i361.Dio>()),
     );
@@ -107,6 +114,9 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.lazySingleton<_i867.AuthRemoteDataSource>(
       () => _i599.AuthRemoteDataSourceImpl(gh<_i734.AuthApiClient>()),
+    );
+    gh.factory<_i595.LikeCubit>(
+      () => _i595.LikeCubit(gh<_i449.LikeLocalDataSource>()),
     );
     gh.lazySingleton<_i260.ActivityRepository>(
       () => _i149.ActivityRepositoryImpl(

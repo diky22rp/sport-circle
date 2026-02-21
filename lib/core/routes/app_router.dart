@@ -4,6 +4,7 @@ import 'package:sport_circle/features/activity/presentation/pages/activity_page.
 import 'package:sport_circle/features/authentication/presentation/pages/login_page.dart';
 import 'package:sport_circle/features/authentication/presentation/pages/register_page.dart';
 import 'package:sport_circle/features/home/presentation/home_screen.dart';
+import 'package:sport_circle/features/like/presentation/pages/like_page.dart';
 import 'package:sport_circle/features/main/presentation/main_page.dart';
 import 'package:sport_circle/features/profile/presentation/profile_screen.dart';
 import 'package:sport_circle/features/splash/presentation/splash_screen.dart';
@@ -50,7 +51,7 @@ final GoRouter appRouter = GoRouter(
             GoRoute(
               path: '/saved',
               name: 'saved',
-              builder: (context, state) => const HomeScreen(),
+              builder: (context, state) => const LikePage(),
             ),
           ],
         ),

@@ -23,4 +23,20 @@ class ActivityCityEntity extends Equatable {
     cityNameFull,
     cityType,
   ];
+
+  Map<String, dynamic> toJson() => {
+    'cityId': cityId,
+    'provinceId': provinceId,
+    'cityName': cityName,
+    'cityNameFull': cityNameFull,
+    'cityType': cityType,
+  };
+
+  factory ActivityCityEntity.fromJson(Map<String, dynamic> json) => ActivityCityEntity(
+    cityId: json['cityId'],
+    provinceId: json['provinceId'],
+    cityName: json['cityName'],
+    cityNameFull: json['cityNameFull'],
+    cityType: json['cityType'],
+  );
 }

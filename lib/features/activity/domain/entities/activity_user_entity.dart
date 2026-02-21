@@ -13,4 +13,13 @@ class ActivityUserEntity extends Equatable {
 
   @override
   List<Object?> get props => [id, name, email];
+
+  Map<String, dynamic> toJson() => {'id': id, 'name': name, 'email': email};
+
+  factory ActivityUserEntity.fromJson(Map<String, dynamic> json) =>
+      ActivityUserEntity(
+        id: json['id'],
+        name: json['name'],
+        email: json['email'],
+      );
 }

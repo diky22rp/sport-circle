@@ -252,10 +252,30 @@ class _ActivityPageState extends State<ActivityPage> {
                             child: SportCircleLoading(isOverlay: false),
                           ),
                           loaded: (activities, hasReachedMax) {
-                            return ActivityList(
-                              activities: activities,
-                              hasReachedMax: hasReachedMax,
-                              scrollController: _scrollController,
+                            return RefreshIndicator(
+                              onRefresh: () async {
+                                _page = 1;
+                                context.read<ActivityBloc>().add(
+                                  ActivityEvent.fetchActivities(
+                                    page: 1,
+                                    perPage: _perPage,
+                                    sportCategoryId: _selectedCategoryId == null
+                                        ? null
+                                        : int.tryParse(_selectedCategoryId!),
+                                    search: _search,
+                                    cityId: _selectedCity?.id,
+                                  ),
+                                );
+                                // Optionally wait for loading to finish
+                                await Future.delayed(
+                                  const Duration(milliseconds: 600),
+                                );
+                              },
+                              child: ActivityList(
+                                activities: activities,
+                                hasReachedMax: hasReachedMax,
+                                scrollController: _scrollController,
+                              ),
                             );
                           },
                           error: (message) => Center(child: Text(message)),

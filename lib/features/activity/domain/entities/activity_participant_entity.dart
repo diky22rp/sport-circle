@@ -16,4 +16,18 @@ class ActivityParticipantEntity extends Equatable {
 
   @override
   List<Object?> get props => [id, sportActivityId, userId, user];
+
+  Map<String, dynamic> toJson() => {
+    'id': id,
+    'sportActivityId': sportActivityId,
+    'userId': userId,
+    'user': user.toJson(),
+  };
+
+  factory ActivityParticipantEntity.fromJson(Map<String, dynamic> json) => ActivityParticipantEntity(
+    id: json['id'],
+    sportActivityId: json['sportActivityId'],
+    userId: json['userId'],
+    user: ActivityUserEntity.fromJson(json['user']),
+  );
 }

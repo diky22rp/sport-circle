@@ -27,7 +27,9 @@ class CategoryHorizontalList extends StatelessWidget {
           final selected = cat.id == selectedCategoryId;
           return IntrinsicWidth(
             child: GestureDetector(
-              onTap: () => onCategorySelected?.call(cat.id),
+              onTap: () => onCategorySelected?.call(
+                selected ? null : cat.id,
+              ), // Klik ulang kategori yang sudah selected akan unselect
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
