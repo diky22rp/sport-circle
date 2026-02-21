@@ -9,6 +9,18 @@ class ActivityProvinceEntity extends Equatable {
     required this.provinceName,
   });
 
+  factory ActivityProvinceEntity.fromJson(Map<String, dynamic> json) {
+    return ActivityProvinceEntity(
+      provinceId: json['province_id'] ?? json['provinceId'],
+      provinceName: json['province_name'] ?? json['provinceName'],
+    );
+  }
+
+  Map<String, dynamic> toJson() => {
+    'province_id': provinceId,
+    'province_name': provinceName,
+  };
+
   @override
   List<Object?> get props => [provinceId, provinceName];
 }

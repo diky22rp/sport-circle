@@ -1,5 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
+import 'package:sport_circle/features/activity/domain/entities/activity_entity.dart';
+import 'package:sport_circle/features/activity/presentation/pages/activity_detail_page.dart';
 import 'package:sport_circle/features/activity/presentation/pages/activity_page.dart';
 import 'package:sport_circle/features/authentication/presentation/pages/login_page.dart';
 import 'package:sport_circle/features/authentication/presentation/pages/register_page.dart';
@@ -43,6 +45,14 @@ final GoRouter appRouter = GoRouter(
               path: '/activity',
               name: 'activity',
               builder: (context, state) => const ActivityPage(),
+            ),
+            GoRoute(
+              path: '/activity/:id',
+              name: 'activity_detail',
+              builder: (context, state) {
+                final activity = state.extra as ActivityEntity;
+                return ActivityDetailPage(activity: activity);
+              },
             ),
           ],
         ),

@@ -13,6 +13,7 @@ import 'package:sport_circle/features/activity/presentation/pages/widgets/activi
 import 'package:sport_circle/features/activity/presentation/pages/widgets/location_filter_button.dart';
 import 'package:sport_circle/features/activity/presentation/pages/widgets/location_picker_bottom_sheet.dart';
 import 'package:sport_circle/features/activity/presentation/pages/widgets/activity_list.dart';
+import 'package:go_router/go_router.dart';
 
 // Hardcode data (gunakan model dari location_picker_bottom_sheet.dart)
 final List<Province> provinces = [
@@ -275,6 +276,12 @@ class _ActivityPageState extends State<ActivityPage> {
                                 activities: activities,
                                 hasReachedMax: hasReachedMax,
                                 scrollController: _scrollController,
+                                onTap: (activity) {
+                                  context.push(
+                                    '/activity/${activity.id}',
+                                    extra: activity,
+                                  );
+                                },
                               ),
                             );
                           },

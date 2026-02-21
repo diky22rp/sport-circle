@@ -2,6 +2,7 @@ import 'package:equatable/equatable.dart';
 import 'package:sport_circle/features/activity/domain/entities/activity_city_entity.dart';
 import 'package:sport_circle/features/activity/domain/entities/activity_organizer_entity.dart';
 import 'package:sport_circle/features/activity/domain/entities/activity_participant_entity.dart';
+import 'package:sport_circle/features/activity/domain/entities/activity_sport_category_entity.dart';
 
 class ActivityEntity extends Equatable {
   final int id;
@@ -21,6 +22,7 @@ class ActivityEntity extends Equatable {
   final ActivityOrganizerEntity organizer;
   final ActivityCityEntity city;
   final List<ActivityParticipantEntity> participants;
+  final ActivitySportCategoryEntity? sportCategory;
 
   const ActivityEntity({
     required this.id,
@@ -40,6 +42,7 @@ class ActivityEntity extends Equatable {
     required this.organizer,
     required this.city,
     required this.participants,
+    this.sportCategory,
   });
 
   // Convert object to Map<String, dynamic>
@@ -59,9 +62,10 @@ class ActivityEntity extends Equatable {
       'endTime': endTime,
       'createdAt': createdAt,
       'updatedAt': updatedAt,
-      'organizer': organizer.toJson(), // Pastikan organizer punya toJson()
-      'city': city.toJson(),           // Pastikan city punya toJson()
-      'participants': participants.map((e) => e.toJson()).toList(), // Pastikan participant punya toJson()
+      'organizer': organizer.toJson(),
+      'city': city.toJson(),
+      'participants': participants.map((e) => e.toJson()).toList(),
+      'sportCategory': sportCategory?.toJson(),
     };
   }
 
@@ -85,8 +89,14 @@ class ActivityEntity extends Equatable {
       organizer: ActivityOrganizerEntity.fromJson(json['organizer']),
       city: ActivityCityEntity.fromJson(json['city']),
       participants: (json['participants'] as List<dynamic>)
-          .map((e) => ActivityParticipantEntity.fromJson(e as Map<String, dynamic>))
+          .map(
+            (e) =>
+                ActivityParticipantEntity.fromJson(e as Map<String, dynamic>),
+          )
           .toList(),
+      sportCategory: json['sport_category'] != null
+          ? ActivitySportCategoryEntity.fromJson(json['sport_category'])
+          : null,
     );
   }
 
@@ -109,5 +119,6 @@ class ActivityEntity extends Equatable {
     organizer,
     city,
     participants,
+    sportCategory,
   ];
 }

@@ -8,10 +8,12 @@ import 'core/presentation/bloc_observer.dart';
 import 'core/themes/app_theme.dart';
 import 'core/routes/app_router.dart';
 import 'package:sport_circle/features/authentication/presentation/bloc/authentication/authentication_bloc.dart';
+import 'package:intl/date_symbol_data_local.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await configureDependencies();
+  await initializeDateFormatting('id', null);
   Bloc.observer = AppBlocObserver();
   runApp(
     MultiBlocProvider(
