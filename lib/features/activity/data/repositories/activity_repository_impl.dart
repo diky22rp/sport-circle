@@ -17,7 +17,7 @@ class ActivityRepositoryImpl implements ActivityRepository {
 
   @override
   Future<Either<Failure, PaginatedActivitiesEntity>> getActivities({
-    bool isPaginate = false,
+    bool isPaginate = true,
     int perPage = 10,
     int page = 1,
     String? search,

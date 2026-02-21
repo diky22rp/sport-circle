@@ -5,11 +5,11 @@ import 'package:sport_circle/features/activity/presentation/pages/activity_detai
 import 'package:sport_circle/features/activity/presentation/pages/activity_page.dart';
 import 'package:sport_circle/features/authentication/presentation/pages/login_page.dart';
 import 'package:sport_circle/features/authentication/presentation/pages/register_page.dart';
-import 'package:sport_circle/features/home/presentation/home_screen.dart';
 import 'package:sport_circle/features/like/presentation/pages/like_page.dart';
 import 'package:sport_circle/features/main/presentation/main_page.dart';
 import 'package:sport_circle/features/profile/presentation/profile_screen.dart';
 import 'package:sport_circle/features/splash/presentation/splash_screen.dart';
+import 'package:sport_circle/features/transaction/presentation/pages/my_transactions_page.dart';
 
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
 
@@ -68,9 +68,9 @@ final GoRouter appRouter = GoRouter(
         StatefulShellBranch(
           routes: [
             GoRoute(
-              path: '/settings',
-              name: 'settings',
-              builder: (context, state) => const HomeScreen(),
+              path: '/history',
+              name: 'history',
+              builder: (context, state) => const MyTransactionsPage(),
             ),
           ],
         ),

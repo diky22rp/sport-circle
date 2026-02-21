@@ -29,6 +29,8 @@ import 'package:sport_circle/features/activity/domain/usecases/create_activity_u
     as _i990;
 import 'package:sport_circle/features/activity/domain/usecases/get_activities_usecase.dart'
     as _i122;
+import 'package:sport_circle/features/activity/domain/usecases/get_activity_by_id_usecase.dart'
+    as _i873;
 import 'package:sport_circle/features/activity/presentation/bloc/activity_bloc.dart'
     as _i1055;
 import 'package:sport_circle/features/authentication/data/datasources/auth_api_client.dart'
@@ -93,6 +95,30 @@ import 'package:sport_circle/features/location/domain/usecases/get_provinces.dar
     as _i564;
 import 'package:sport_circle/features/location/presentation/cubit/location_cubit.dart'
     as _i294;
+import 'package:sport_circle/features/transaction/data/datasources/remote/transaction_remote_data_source.dart'
+    as _i209;
+import 'package:sport_circle/features/transaction/data/datasources/remote/transaction_remote_data_source_impl.dart'
+    as _i426;
+import 'package:sport_circle/features/transaction/data/datasources/transaction_api_client.dart'
+    as _i739;
+import 'package:sport_circle/features/transaction/data/repositories/transaction_repository_impl.dart'
+    as _i623;
+import 'package:sport_circle/features/transaction/domain/repositories/transaction_repository.dart'
+    as _i748;
+import 'package:sport_circle/features/transaction/domain/usecases/cancel_transaction_usecase.dart'
+    as _i510;
+import 'package:sport_circle/features/transaction/domain/usecases/create_transaction_usecase.dart'
+    as _i856;
+import 'package:sport_circle/features/transaction/domain/usecases/get_my_transactions_usecase.dart'
+    as _i673;
+import 'package:sport_circle/features/transaction/domain/usecases/get_transaction_by_id_usecase.dart'
+    as _i921;
+import 'package:sport_circle/features/transaction/domain/usecases/update_transaction_usecase.dart'
+    as _i242;
+import 'package:sport_circle/features/transaction/domain/usecases/upload_proof_payment_usecase.dart'
+    as _i25;
+import 'package:sport_circle/features/transaction/presentation/bloc/transaction_bloc.dart'
+    as _i143;
 
 extension GetItInjectableX on _i174.GetIt {
   // initializes the registration of main-scope dependencies inside of GetIt
@@ -128,6 +154,9 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i944.LocationApiClient>(
       () => registerModule.locationApiClient(gh<_i361.Dio>()),
     );
+    gh.lazySingleton<_i739.TransactionApiClient>(
+      () => registerModule.transactionApiClient(gh<_i361.Dio>()),
+    );
     gh.lazySingleton<_i715.ActivityRemoteDataSource>(
       () => _i246.ActivityRemoteDataSourceImpl(gh<_i291.ActivityApiClient>()),
     );
@@ -143,11 +172,19 @@ extension GetItInjectableX on _i174.GetIt {
         gh<_i531.AuthLocalDataSource>(),
       ),
     );
+    gh.lazySingleton<_i209.TransactionRemoteDataSource>(
+      () => _i426.TransactionRemoteDataSourceImpl(
+        gh<_i739.TransactionApiClient>(),
+      ),
+    );
     gh.lazySingleton<_i990.CreateActivityUseCase>(
       () => _i990.CreateActivityUseCase(gh<_i260.ActivityRepository>()),
     );
     gh.lazySingleton<_i122.GetActivitiesUsecase>(
       () => _i122.GetActivitiesUsecase(gh<_i260.ActivityRepository>()),
+    );
+    gh.lazySingleton<_i873.GetActivityByIdUseCase>(
+      () => _i873.GetActivityByIdUseCase(gh<_i260.ActivityRepository>()),
     );
     gh.lazySingleton<_i127.CategoryRemoteDataSource>(
       () => _i129.CategoryRemoteDataSourceImpl(
@@ -179,6 +216,30 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i564.GetProvinces>(
       () => _i564.GetProvinces(gh<_i11.LocationRepository>()),
     );
+    gh.lazySingleton<_i748.TransactionRepository>(
+      () => _i623.TransactionRepositoryImpl(
+        gh<_i209.TransactionRemoteDataSource>(),
+        gh<_i531.AuthLocalDataSource>(),
+      ),
+    );
+    gh.lazySingleton<_i510.CancelTransactionUseCase>(
+      () => _i510.CancelTransactionUseCase(gh<_i748.TransactionRepository>()),
+    );
+    gh.lazySingleton<_i856.CreateTransactionUseCase>(
+      () => _i856.CreateTransactionUseCase(gh<_i748.TransactionRepository>()),
+    );
+    gh.lazySingleton<_i673.GetMyTransactionsUseCase>(
+      () => _i673.GetMyTransactionsUseCase(gh<_i748.TransactionRepository>()),
+    );
+    gh.lazySingleton<_i921.GetTransactionByIdUseCase>(
+      () => _i921.GetTransactionByIdUseCase(gh<_i748.TransactionRepository>()),
+    );
+    gh.lazySingleton<_i242.UpdateTransactionUseCase>(
+      () => _i242.UpdateTransactionUseCase(gh<_i748.TransactionRepository>()),
+    );
+    gh.lazySingleton<_i25.UploadProofPaymentUseCase>(
+      () => _i25.UploadProofPaymentUseCase(gh<_i748.TransactionRepository>()),
+    );
     gh.lazySingleton<_i110.CheckTokenUseCase>(
       () => _i110.CheckTokenUseCase(gh<_i896.AuthRepository>()),
     );
@@ -199,6 +260,17 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.lazySingleton<_i875.CategoryRepository>(
       () => _i91.CategoryRepositoryImpl(gh<_i127.CategoryRemoteDataSource>()),
+    );
+    gh.factory<_i143.TransactionBloc>(
+      () => _i143.TransactionBloc(
+        createTransaction: gh<_i856.CreateTransactionUseCase>(),
+        getMyTransactions: gh<_i673.GetMyTransactionsUseCase>(),
+        getTransactionById: gh<_i921.GetTransactionByIdUseCase>(),
+        getActivityById: gh<_i873.GetActivityByIdUseCase>(),
+        updateTransaction: gh<_i242.UpdateTransactionUseCase>(),
+        uploadProofPayment: gh<_i25.UploadProofPaymentUseCase>(),
+        cancelTransaction: gh<_i510.CancelTransactionUseCase>(),
+      ),
     );
     gh.factory<_i760.AuthenticationBloc>(
       () => _i760.AuthenticationBloc(

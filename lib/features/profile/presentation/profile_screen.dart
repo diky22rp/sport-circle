@@ -8,8 +8,22 @@ import 'package:sport_circle/features/profile/presentation/widgets/profile_menu_
 import 'package:sport_circle/features/profile/presentation/widgets/profile_section.dart';
 import 'package:sport_circle/features/profile/presentation/widgets/profile_setting_form.dart';
 
-class ProfileScreen extends StatelessWidget {
+class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
+
+  @override
+  State<ProfileScreen> createState() => _ProfileScreenState();
+}
+
+class _ProfileScreenState extends State<ProfileScreen> {
+  @override
+  void initState() {
+    super.initState();
+    // Trigger fetch user when profile screen is opened
+    context.read<AuthenticationBloc>().add(
+      const AuthenticationEvent.fetchUser(),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {

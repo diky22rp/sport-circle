@@ -21,4 +21,14 @@ class ApiConstants {
   static const String createActivity = '/api/v1/sport-activities/create';
   static const String updateActivity = '/api/v1/sport-activities/update';
   static const String deleteActivity = '/api/v1/sport-activities/delete';
+
+  // Transactions
+  static const String createTransaction = '/api/v1/transaction/create';
+  static const String getMyTransactions = '/api/v1/my-transaction';
+  static const String getTransactionById = '/api/v1/transaction/{id}';
+  static const String updateTransaction =
+      '/api/v1/transaction/update-status/{id}';
+  static const String uploadProofPayment =
+      '/api/v1/transaction/update-proof-payment/{id}';
+  static const String cancelTransaction = '/api/v1/transaction/cancel/{id}';
 }

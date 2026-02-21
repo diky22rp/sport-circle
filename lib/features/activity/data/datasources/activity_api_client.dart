@@ -39,7 +39,7 @@ abstract class ActivityApiClient {
   // Fetches a single activity by its ID.
   // Returns ApiResponseModel<ActivityModel> with the activity data.
   @GET('${ApiConstants.activities}/{id}')
-  Future<ApiResponseModel<ActivityModel>> getActivityById(
+  Future<ApiResponseModel<dynamic>> getActivityById(
     @Header('Authorization') String? token,
     @Path('id') int id,
   );

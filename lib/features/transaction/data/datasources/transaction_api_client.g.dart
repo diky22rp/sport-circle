@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'activity_api_client.dart';
+part of 'transaction_api_client.dart';
 
 // dart format off
 
@@ -10,8 +10,8 @@ part of 'activity_api_client.dart';
 
 // ignore_for_file: unnecessary_brace_in_string_interps,no_leading_underscores_for_local_identifiers,unused_element,unnecessary_string_interpolations,unused_element_parameter,avoid_unused_constructor_parameters,unreachable_from_main
 
-class _ActivityApiClient implements ActivityApiClient {
-  _ActivityApiClient(this._dio, {this.baseUrl, this.errorLogger});
+class _TransactionApiClient implements TransactionApiClient {
+  _TransactionApiClient(this._dio, {this.baseUrl, this.errorLogger});
 
   final Dio _dio;
 
@@ -20,33 +20,32 @@ class _ActivityApiClient implements ActivityApiClient {
   final ParseErrorLogger? errorLogger;
 
   @override
-  Future<ApiResponseModel<ActivityModel>> createActivity(
-    String? token,
-    Map<String, dynamic> body,
-  ) async {
+  Future<ApiResponseModel<dynamic>> createTransaction({
+    required String token,
+    required Map<String, dynamic> body,
+  }) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
-    queryParameters.removeWhere((k, v) => v == null);
     final _headers = <String, dynamic>{r'Authorization': token};
     _headers.removeWhere((k, v) => v == null);
     final _data = <String, dynamic>{};
     _data.addAll(body);
-    final _options = _setStreamType<ApiResponseModel<ActivityModel>>(
+    final _options = _setStreamType<ApiResponseModel<dynamic>>(
       Options(method: 'POST', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
-            '/api/v1/sport-activities',
+            '/api/v1/transaction/create',
             queryParameters: queryParameters,
             data: _data,
           )
           .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
     );
     final _result = await _dio.fetch<Map<String, dynamic>>(_options);
-    late ApiResponseModel<ActivityModel> _value;
+    late ApiResponseModel<dynamic> _value;
     try {
-      _value = ApiResponseModel<ActivityModel>.fromJson(
+      _value = ApiResponseModel<dynamic>.fromJson(
         _result.data!,
-        (json) => ActivityModel.fromJson(json as Map<String, dynamic>),
+        (json) => json as dynamic,
       );
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options, response: _result);
@@ -56,25 +55,18 @@ class _ActivityApiClient implements ActivityApiClient {
   }
 
   @override
-  Future<ApiResponseModel<dynamic>> getActivities({
-    String? token,
-    bool isPaginate = false,
-    int perPage = 5,
+  Future<ApiResponseModel<dynamic>> getMyTransactions({
+    required String token,
+    bool isPaginate = true,
+    int perPage = 10,
     int page = 1,
-    String? search,
-    int? sportCategoryId,
-    int? cityId,
   }) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{
       r'is_paginate': isPaginate,
       r'per_page': perPage,
       r'page': page,
-      r'search': search,
-      r'sport_category_id': sportCategoryId,
-      r'city_id': cityId,
     };
-    queryParameters.removeWhere((k, v) => v == null);
     final _headers = <String, dynamic>{r'Authorization': token};
     _headers.removeWhere((k, v) => v == null);
     const Map<String, dynamic>? _data = null;
@@ -82,7 +74,7 @@ class _ActivityApiClient implements ActivityApiClient {
       Options(method: 'GET', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
-            '/api/v1/sport-activities',
+            '/api/v1/my-transaction',
             queryParameters: queryParameters,
             data: _data,
           )
@@ -103,32 +95,31 @@ class _ActivityApiClient implements ActivityApiClient {
   }
 
   @override
-  Future<ApiResponseModel<dynamic>> getActivityById(
-    String? token,
-    int id,
-  ) async {
+  Future<ApiResponseModel<TransactionModel>> getTransactionById({
+    required String token,
+    required int id,
+  }) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
-    queryParameters.removeWhere((k, v) => v == null);
     final _headers = <String, dynamic>{r'Authorization': token};
     _headers.removeWhere((k, v) => v == null);
     const Map<String, dynamic>? _data = null;
-    final _options = _setStreamType<ApiResponseModel<dynamic>>(
+    final _options = _setStreamType<ApiResponseModel<TransactionModel>>(
       Options(method: 'GET', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
-            '/api/v1/sport-activities/${id}',
+            '/api/v1/transaction/${id}',
             queryParameters: queryParameters,
             data: _data,
           )
           .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
     );
     final _result = await _dio.fetch<Map<String, dynamic>>(_options);
-    late ApiResponseModel<dynamic> _value;
+    late ApiResponseModel<TransactionModel> _value;
     try {
-      _value = ApiResponseModel<dynamic>.fromJson(
+      _value = ApiResponseModel<TransactionModel>.fromJson(
         _result.data!,
-        (json) => json as dynamic,
+        (json) => TransactionModel.fromJson(json as Map<String, dynamic>),
       );
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options, response: _result);
@@ -138,34 +129,33 @@ class _ActivityApiClient implements ActivityApiClient {
   }
 
   @override
-  Future<ApiResponseModel<ActivityModel>> updateActivity(
-    String? token,
-    int id,
-    Map<String, dynamic> body,
-  ) async {
+  Future<ApiResponseModel<dynamic>> updateTransaction({
+    required String token,
+    required int id,
+    required Map<String, dynamic> body,
+  }) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
-    queryParameters.removeWhere((k, v) => v == null);
     final _headers = <String, dynamic>{r'Authorization': token};
     _headers.removeWhere((k, v) => v == null);
     final _data = <String, dynamic>{};
     _data.addAll(body);
-    final _options = _setStreamType<ApiResponseModel<ActivityModel>>(
+    final _options = _setStreamType<ApiResponseModel<dynamic>>(
       Options(method: 'POST', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
-            '/api/v1/sport-activities/update/${id}',
+            '/api/v1/transaction/update-status/${id}',
             queryParameters: queryParameters,
             data: _data,
           )
           .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
     );
     final _result = await _dio.fetch<Map<String, dynamic>>(_options);
-    late ApiResponseModel<ActivityModel> _value;
+    late ApiResponseModel<dynamic> _value;
     try {
-      _value = ApiResponseModel<ActivityModel>.fromJson(
+      _value = ApiResponseModel<dynamic>.fromJson(
         _result.data!,
-        (json) => ActivityModel.fromJson(json as Map<String, dynamic>),
+        (json) => json as dynamic,
       );
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options, response: _result);
@@ -175,29 +165,67 @@ class _ActivityApiClient implements ActivityApiClient {
   }
 
   @override
-  Future<ApiResponseModel<void>> deleteActivity(String? token, int id) async {
+  Future<ApiResponseModel<dynamic>> uploadProofPayment({
+    required String token,
+    required int id,
+    required Map<String, dynamic> body,
+  }) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
-    queryParameters.removeWhere((k, v) => v == null);
     final _headers = <String, dynamic>{r'Authorization': token};
     _headers.removeWhere((k, v) => v == null);
-    const Map<String, dynamic>? _data = null;
-    final _options = _setStreamType<ApiResponseModel<void>>(
-      Options(method: 'DELETE', headers: _headers, extra: _extra)
+    final _data = <String, dynamic>{};
+    _data.addAll(body);
+    final _options = _setStreamType<ApiResponseModel<dynamic>>(
+      Options(method: 'POST', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
-            '/api/v1/sport-activities/delete/${id}',
+            '/api/v1/transaction/update-proof-payment/${id}',
             queryParameters: queryParameters,
             data: _data,
           )
           .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
     );
     final _result = await _dio.fetch<Map<String, dynamic>>(_options);
-    late ApiResponseModel<void> _value;
+    late ApiResponseModel<dynamic> _value;
     try {
-      _value = ApiResponseModel<void>.fromJson(
+      _value = ApiResponseModel<dynamic>.fromJson(
         _result.data!,
-        (json) => () {}(),
+        (json) => json as dynamic,
+      );
+    } on Object catch (e, s) {
+      errorLogger?.logError(e, s, _options, response: _result);
+      rethrow;
+    }
+    return _value;
+  }
+
+  @override
+  Future<ApiResponseModel<dynamic>> cancelTransaction({
+    required String token,
+    required int id,
+  }) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{r'Authorization': token};
+    _headers.removeWhere((k, v) => v == null);
+    const Map<String, dynamic>? _data = null;
+    final _options = _setStreamType<ApiResponseModel<dynamic>>(
+      Options(method: 'POST', headers: _headers, extra: _extra)
+          .compose(
+            _dio.options,
+            '/api/v1/transaction/cancel/${id}',
+            queryParameters: queryParameters,
+            data: _data,
+          )
+          .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
+    );
+    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
+    late ApiResponseModel<dynamic> _value;
+    try {
+      _value = ApiResponseModel<dynamic>.fromJson(
+        _result.data!,
+        (json) => json as dynamic,
       );
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options, response: _result);

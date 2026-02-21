@@ -7,6 +7,7 @@ import 'package:sport_circle/features/activity/data/datasources/activity_api_cli
 import 'package:sport_circle/features/authentication/data/datasources/auth_api_client.dart';
 import 'package:sport_circle/features/category/data/datasources/category_api_client.dart';
 import 'package:sport_circle/features/location/data/datasources/location_api_client.dart';
+import 'package:sport_circle/features/transaction/data/datasources/transaction_api_client.dart';
 
 /// ========================================================================
 /// Register Module — Dependency Injection
@@ -57,4 +58,8 @@ abstract class RegisterModule {
 
   @lazySingleton
   LocationApiClient locationApiClient(Dio dio) => LocationApiClient(dio);
+
+  @lazySingleton
+  TransactionApiClient transactionApiClient(Dio dio) =>
+      TransactionApiClient(dio);
 }

@@ -13,7 +13,7 @@ class ActivityRemoteDataSourceImpl implements ActivityRemoteDataSource {
   @override
   Future<PaginatedActivitiesEntity> getActivities({
     required String token,
-    bool isPaginate = false,
+    bool isPaginate = true,
     int perPage = 5,
     int page = 1,
     String? search,
@@ -50,7 +50,9 @@ class ActivityRemoteDataSourceImpl implements ActivityRemoteDataSource {
     required int id,
   }) async {
     final response = await _apiClient.getActivityById(token, id);
-    return response.data!;
+
+    final map = response.result as Map<String, dynamic>;
+    return ActivityModel.fromJson(map);
   }
 
   @override
