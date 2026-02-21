@@ -53,7 +53,7 @@ class _LoginViewState extends State<_LoginView> {
               type: AppSnackbarType.success,
             );
 
-            context.goNamed('home');
+            context.goNamed('activity');
           },
           failure: (message) {
             AppSnackbar.show(

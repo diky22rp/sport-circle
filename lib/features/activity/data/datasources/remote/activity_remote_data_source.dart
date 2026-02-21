@@ -1,7 +1,8 @@
 import 'package:sport_circle/features/activity/data/models/activity_model.dart';
+import 'package:sport_circle/features/activity/domain/entities/paginated_activities_entity.dart';
 
 abstract class ActivityRemoteDataSource {
-  Future<List<ActivityModel>> getActivities({
+  Future<PaginatedActivitiesEntity> getActivities({
     required String token,
     bool isPaginate,
     int perPage,

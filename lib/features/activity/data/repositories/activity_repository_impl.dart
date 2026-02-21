@@ -4,6 +4,7 @@ import 'package:injectable/injectable.dart';
 import 'package:sport_circle/core/error/failures.dart';
 import 'package:sport_circle/features/activity/data/datasources/remote/activity_remote_data_source.dart';
 import 'package:sport_circle/features/activity/domain/entities/activity_entity.dart';
+import 'package:sport_circle/features/activity/domain/entities/paginated_activities_entity.dart';
 import 'package:sport_circle/features/activity/domain/repositories/activity_repository.dart';
 import 'package:sport_circle/features/authentication/data/datasources/local/auth_local_data_source.dart';
 
@@ -15,7 +16,7 @@ class ActivityRepositoryImpl implements ActivityRepository {
   ActivityRepositoryImpl(this._remoteDataSource, this._localDataSource);
 
   @override
-  Future<Either<Failure, List<ActivityEntity>>> getActivities({
+  Future<Either<Failure, PaginatedActivitiesEntity>> getActivities({
     bool isPaginate = false,
     int perPage = 10,
     int page = 1,
@@ -29,7 +30,7 @@ class ActivityRepositoryImpl implements ActivityRepository {
     }
 
     try {
-      final activityModels = await _remoteDataSource.getActivities(
+      final paginated = await _remoteDataSource.getActivities(
         token: token,
         isPaginate: isPaginate,
         perPage: perPage,
@@ -38,10 +39,7 @@ class ActivityRepositoryImpl implements ActivityRepository {
         sportCategoryId: sportCategoryId,
         cityId: cityId,
       );
-      final activities = activityModels
-          .map((model) => model.toEntity())
-          .toList();
-      return Right(activities);
+      return Right(paginated);
     } on DioException catch (e) {
       return Left(ServerFailure(e.toString()));
     } catch (e) {

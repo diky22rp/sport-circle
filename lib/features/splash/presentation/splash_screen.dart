@@ -45,7 +45,7 @@ class _SplashScreenState extends State<SplashScreen>
       listener: (context, state) async {
         await Future.delayed(const Duration(seconds: 5));
         state.whenOrNull(
-          authenticated: () => context.goNamed('home'),
+          authenticated: () => context.goNamed('activity'),
           unauthenticated: () => context.goNamed('login'),
         );
       },

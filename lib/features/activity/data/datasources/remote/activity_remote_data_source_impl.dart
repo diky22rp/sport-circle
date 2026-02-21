@@ -2,6 +2,7 @@ import 'package:injectable/injectable.dart';
 import 'package:sport_circle/features/activity/data/datasources/activity_api_client.dart';
 import 'package:sport_circle/features/activity/data/datasources/remote/activity_remote_data_source.dart';
 import 'package:sport_circle/features/activity/data/models/activity_model.dart';
+import 'package:sport_circle/features/activity/domain/entities/paginated_activities_entity.dart';
 
 @LazySingleton(as: ActivityRemoteDataSource)
 class ActivityRemoteDataSourceImpl implements ActivityRemoteDataSource {
@@ -10,7 +11,7 @@ class ActivityRemoteDataSourceImpl implements ActivityRemoteDataSource {
   ActivityRemoteDataSourceImpl(this._apiClient);
 
   @override
-  Future<List<ActivityModel>> getActivities({
+  Future<PaginatedActivitiesEntity> getActivities({
     required String token,
     bool isPaginate = false,
     int perPage = 5,
@@ -29,23 +30,18 @@ class ActivityRemoteDataSourceImpl implements ActivityRemoteDataSource {
       cityId: cityId,
     );
 
-    // Retrofit sudah parsing ke model
-    if (isPaginate) {
-      final map = response.result as Map<String, dynamic>;
-      final List<dynamic> rawList = map['data'] ?? [];
-      final List<ActivityModel> activities = rawList.map((item) {
-        if (item is ActivityModel) return item;
-        return ActivityModel.fromJson(item as Map<String, dynamic>);
-      }).toList();
-      return activities;
-    } else {
-      final List<dynamic> rawList = response.result as List<dynamic>;
-      final List<ActivityModel> activities = rawList.map((item) {
-        if (item is ActivityModel) return item;
-        return ActivityModel.fromJson(item as Map<String, dynamic>);
-      }).toList();
-      return activities;
-    }
+    final map = response.result as Map<String, dynamic>;
+    final List<ActivityModel> activities = (map['data'] as List)
+        .map((item) => ActivityModel.fromJson(item as Map<String, dynamic>))
+        .toList();
+
+    return PaginatedActivitiesEntity(
+      data: activities.map((e) => e.toEntity()).toList(),
+      currentPage: map['current_page'] ?? 1,
+      lastPage: map['last_page'] ?? 1,
+      perPage: map['per_page'] ?? activities.length,
+      total: map['total'] ?? activities.length,
+    );
   }
 
   @override

@@ -1,7 +1,7 @@
 import 'package:dartz/dartz.dart';
 import 'package:injectable/injectable.dart';
-import 'package:sport_circle/features/activity/domain/entities/activity_entity.dart';
 import 'package:sport_circle/core/error/failures.dart';
+import 'package:sport_circle/features/activity/domain/entities/paginated_activities_entity.dart';
 import 'package:sport_circle/features/activity/domain/repositories/activity_repository.dart';
 
 @lazySingleton
@@ -10,7 +10,7 @@ class GetActivitiesUsecase {
 
   GetActivitiesUsecase(this.repository);
 
-  Future<Either<Failure, List<ActivityEntity>>> call({
+  Future<Either<Failure, PaginatedActivitiesEntity>> call({
     isPaginate = true,
     required int page,
     required int perPage,

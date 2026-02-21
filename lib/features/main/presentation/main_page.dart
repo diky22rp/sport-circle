@@ -53,8 +53,8 @@ class MainPage extends StatelessWidget {
                           children: [
                             Icon(
                               [
-                                Icons.home_outlined,
-                                Icons.bookmark_outline_rounded,
+                                Icons.search_rounded,
+                                Icons.favorite_border_outlined,
                                 Icons.receipt_long_sharp,
                                 Icons.person_outline_rounded,
                               ][i],
@@ -79,14 +79,14 @@ class MainPage extends StatelessWidget {
                         ),
                         selectedIcon: Icon(
                           [
-                            Icons.home_rounded,
-                            Icons.bookmark_outlined,
+                            Icons.search_outlined,
+                            Icons.favorite_border_rounded,
                             Icons.receipt_long_rounded,
                             Icons.person_rounded,
                           ][i],
                           color: AppTheme.primary,
                         ),
-                        label: ['Home', 'Saved', 'Activity', 'Profile'][i],
+                        label: ['Activity', 'Like', 'History', 'Profile'][i],
                       ),
                   ],
                 ),

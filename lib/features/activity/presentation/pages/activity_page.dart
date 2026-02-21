@@ -47,6 +47,7 @@ class _ActivityPageState extends State<ActivityPage> {
 
   Province? _selectedProvince;
   City? _selectedCity;
+  bool _isFetching = false; // Tambahkan flag ini
 
   @override
   void initState() {
@@ -101,7 +102,8 @@ class _ActivityPageState extends State<ActivityPage> {
       loaded: (activities, hasReachedMax) {
         if (_scrollController.position.pixels >=
             _scrollController.position.maxScrollExtent - 200) {
-          if (!hasReachedMax) {
+          if (!hasReachedMax && !_isFetching) {
+            _isFetching = true; // Set flag sebelum fetch
             _page++;
             bloc.add(
               ActivityEvent.fetchActivities(
@@ -164,7 +166,7 @@ class _ActivityPageState extends State<ActivityPage> {
           children: [
             // Tombol filter lokasi
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               child: LocationFilterButton(
                 cityLabel: _selectedCity != null
                     ? '${_selectedCity!.name}, ${_selectedProvince?.name ?? ''}'
@@ -237,6 +239,11 @@ class _ActivityPageState extends State<ActivityPage> {
                     )
                   : BlocBuilder<ActivityBloc, ActivityState>(
                       builder: (context, state) {
+                        // Reset flag ketika loading selesai
+                        state.whenOrNull(
+                          loaded: (_, __) => _isFetching = false,
+                          error: (_) => _isFetching = false,
+                        );
                         return state.when(
                           initial: () => const Center(
                             child: SportCircleLoading(isOverlay: false),

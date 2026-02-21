@@ -20,14 +20,16 @@ class ActivityBloc extends Bloc<ActivityEvent, ActivityState> {
           final result = await _getActivitiesUseCase(page: 1, perPage: 10);
 
           log(
-            'Fetched activities: ${result.fold((failure) => 'Failure: ${failure.message}', (activities) => 'Success: ${activities.length} activities')}',
+            'Fetched activities: ${result.fold((failure) => 'Failure: ${failure.message}', (activitiesResult) => 'Success: ${activitiesResult.data.length} activities')}',
           );
           result.fold(
             (failure) => emit(ActivityState.error(failure.message)),
-            (activities) => emit(
+            (activitiesResult) => emit(
               ActivityState.loaded(
-                activities,
-                hasReachedMax: activities.length < 10,
+                activitiesResult.data,
+                hasReachedMax:
+                    activitiesResult.currentPage >= activitiesResult.lastPage ||
+                    activitiesResult.data.isEmpty,
               ),
             ),
           );
@@ -42,7 +44,6 @@ class ActivityBloc extends Bloc<ActivityEvent, ActivityState> {
                 },
               );
 
-              // Emit loading hanya jika page == 1
               if (page == 1) {
                 emit(const ActivityState.loading());
               }
@@ -56,14 +57,18 @@ class ActivityBloc extends Bloc<ActivityEvent, ActivityState> {
               );
               result.fold(
                 (failure) => emit(ActivityState.error(failure.message)),
-                (activities) {
+                (activitiesResult) {
+                  final newActivities = activitiesResult.data;
                   final allActivities = page == 1
-                      ? activities
-                      : [...oldActivities, ...activities];
+                      ? newActivities
+                      : [...oldActivities, ...newActivities];
                   emit(
                     ActivityState.loaded(
                       allActivities,
-                      hasReachedMax: activities.length < perPage,
+                      hasReachedMax:
+                          activitiesResult.currentPage >=
+                              activitiesResult.lastPage ||
+                          newActivities.isEmpty,
                     ),
                   );
                 },
@@ -74,10 +79,12 @@ class ActivityBloc extends Bloc<ActivityEvent, ActivityState> {
           final result = await _getActivitiesUseCase(page: 1, perPage: 10);
           result.fold(
             (failure) => emit(ActivityState.error(failure.message)),
-            (activities) => emit(
+            (activitiesResult) => emit(
               ActivityState.loaded(
-                activities,
-                hasReachedMax: activities.length < 10,
+                activitiesResult.data,
+                hasReachedMax:
+                    activitiesResult.currentPage >= activitiesResult.lastPage ||
+                    activitiesResult.data.isEmpty,
               ),
             ),
           );

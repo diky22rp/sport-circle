@@ -39,9 +39,9 @@ final GoRouter appRouter = GoRouter(
         StatefulShellBranch(
           routes: [
             GoRoute(
-              path: '/home',
-              name: 'home',
-              builder: (context, state) => const HomeScreen(),
+              path: '/activity',
+              name: 'activity',
+              builder: (context, state) => const ActivityPage(),
             ),
           ],
         ),
@@ -50,7 +50,7 @@ final GoRouter appRouter = GoRouter(
             GoRoute(
               path: '/saved',
               name: 'saved',
-              builder: (context, state) => const ActivityPage(),
+              builder: (context, state) => const HomeScreen(),
             ),
           ],
         ),

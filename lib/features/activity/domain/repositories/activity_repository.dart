@@ -1,9 +1,10 @@
 import 'package:dartz/dartz.dart';
 import 'package:sport_circle/core/error/failures.dart';
 import 'package:sport_circle/features/activity/domain/entities/activity_entity.dart';
+import 'package:sport_circle/features/activity/domain/entities/paginated_activities_entity.dart';
 
 abstract class ActivityRepository {
-  Future<Either<Failure, List<ActivityEntity>>> getActivities({
+  Future<Either<Failure, PaginatedActivitiesEntity>> getActivities({
     bool isPaginate,
     int perPage,
     int page,
