@@ -2,7 +2,7 @@ name: Build & Distribute Android App
 
 on:
   push:
-    branches: [deployment]
+    branches: [main]
 
 jobs:
   build:
